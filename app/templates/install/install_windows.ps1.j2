@@ -1,0 +1,17 @@
+# app/templates/install/windows.ps1.j2
+$ErrorActionPreference = "Stop"
+$baseUrl = "{{ base_url }}"
+$orgToken = "{{ org_token }}"
+$installDir = "$env:ProgramData\TenshiGuard"
+New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+
+# Fetch Python if missing (optionally switch to MSI in future)
+# For PoC, we keep it simple and just fetch the agent client and run as a scheduled task/service later.
+Invoke-WebRequest -UseBasicParsing -Uri "$baseUrl/install/agent/client/$orgToken" -OutFile "$installDir\agent_client.py"
+
+Set-Content -Path "$installDir\config.json" -Value (@"
+{"base_url":"$baseUrl","org_token":"$orgToken"}
+"@)
+
+Write-Host "Run agent with: python $installDir\agent_client.py"
+Write-Host "For service mode, we’ll add NSSM or a proper Windows Service wrapper next."

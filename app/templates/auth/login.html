@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,37 +16,85 @@
       align-items: center;
       height: 100vh;
     }
+
     .login-box {
-      background: rgba(18,24,36,0.9);
+      background: rgba(18, 24, 36, 0.9);
       padding: 40px;
       border-radius: 20px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
       text-align: center;
       width: 350px;
     }
-    h2 { color: #63e2ff; margin-bottom: 10px; }
-    p { color: #9ab0c6; font-size: 14px; margin-bottom: 30px; }
+
+    h2 {
+      color: #63e2ff;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #9ab0c6;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
     input {
-      width: 100%; padding: 10px; border-radius: 8px;
-      border: 1px solid #1c2636; background: #0b111b; color: #e7eef7;
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #1c2636;
+      background: #0b111b;
+      color: #e7eef7;
       margin-bottom: 15px;
     }
-    input:focus { border-color: #63e2ff; outline: none; }
-    button {
-      width: 100%; background: #63e2ff; color: #001018;
-      border: none; border-radius: 10px; padding: 10px;
-      font-weight: 700; cursor: pointer;
+
+    input:focus {
+      border-color: #63e2ff;
+      outline: none;
     }
-    button:hover { background: #4cc9f0; }
-    a { color: #63e2ff; font-size: 13px; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+
+    button {
+      width: 100%;
+      background: #63e2ff;
+      color: #001018;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #4cc9f0;
+    }
+
+    a {
+      color: #63e2ff;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
+
 <body>
   <div class="login-box">
     <img src="{{ url_for('static', filename='images/logo.png') }}" width="80" alt="TenshiGuard Logo">
     <h2>Welcome to TenshiGuard</h2>
     <p>Secure access to your organization’s monitoring system.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div style="color: {{ '#ff6b6b' if category == 'danger' else '#63e2ff' }}; margin-bottom: 15px; font-size: 14px;">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
     <form method="POST">
       <input type="email" name="email" placeholder="Email" required>
       <input type="password" name="password" placeholder="Password" required>
@@ -54,7 +103,9 @@
     <div style="margin-top:10px;">
       <a href="{{ url_for('auth.forgot_password') }}">Forgot Password?</a> |
       <a href="{{ url_for('register_flow.org') }}">Create Account</a>
+
     </div>
   </div>
 </body>
+
 </html>

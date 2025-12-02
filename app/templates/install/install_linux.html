@@ -1,0 +1,136 @@
+{% extends "install/base_install.html" %}
+{% block title %}Install TenshiGuard Agent on Linux{% endblock %}
+
+{% block content %}
+<div class="install-header fade-in">
+  <div class="install-title-block">
+    <div class="install-icon">
+      <i class="fa-brands fa-linux"></i>
+    </div>
+    <div>
+      <h1>Install TenshiGuard Agent on <span>Linux</span></h1>
+      <p>This guide helps you install the agent on Linux servers, desktops, and cloud instances.</p>
+      <div class="mt-2">
+        <span class="badge-chip me-2">
+          <i class="fa-solid fa-building-shield"></i>
+          Org:
+          <span>{{ org.name }}</span>
+        </span>
+        <span class="badge-chip">
+          <i class="fa-solid fa-key"></i>
+          Token:
+          <span>{{ org_token }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard.setup_agent_page') }}" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i> Back to Setup Agent
+  </a>
+</div>
+
+<div class="install-card fade-in fade-delay-1">
+  <div class="step-heading">
+    <span class="step-pill">Step 1</span>
+    <span class="label">Open Terminal</span>
+  </div>
+
+  <div class="step-body">
+    <div class="prereq-panel mb-3">
+      <h6><i class="fa-solid fa-clipboard-check me-2"></i>Prerequisites</h6>
+      <ul class="mb-0 ps-3">
+        <li>Root or Sudo access (password may be required).</li>
+        <li>Active internet connection.</li>
+        <li>Supported OS: Ubuntu, Debian, Kali, CentOS, Fedora.</li>
+      </ul>
+    </div>
+
+    <p>
+      1. Open your terminal (Shortcut: <strong>Ctrl + Alt + T</strong>).<br>
+      2. Ensure you have <code>curl</code> installed (<code>sudo apt install curl</code> or
+      <code>sudo yum install curl</code>).
+    </p>
+
+    <div class="code-label">Copy and paste this command:</div>
+    <div class="code-box" id="linuxCmd">
+      curl -sSL "{{ manager_url }}/install/agent/{{ org_token }}" | sudo bash
+    </div>
+
+    <button class="copy-btn" onclick="copyFrom('linuxCmd', this)">
+      <i class="fa-solid fa-copy"></i> Copy Command
+    </button>
+
+    <ul class="check-list mt-3">
+      <li><span class="muted">Action:</span> Installs Python dependencies (requests, psutil)</li>
+      <li><span class="muted">Action:</span> Creates a systemd service <code>tenshiguard-agent</code></li>
+      <li><span class="muted">Action:</span> Starts monitoring immediately</li>
+    </ul>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-2">
+  <div class="step-heading">
+    <span class="step-pill">Step 2</span>
+    <span class="label">Verify Installation</span>
+  </div>
+
+  <div class="step-body">
+    <p>Check the status of the agent service:</p>
+
+    <div class="code-box" id="linuxStatus">
+      sudo systemctl status tenshiguard-agent
+    </div>
+
+    <button class="copy-btn secondary" onclick="copyFrom('linuxStatus', this)">
+      <i class="fa-solid fa-copy"></i> Copy
+    </button>
+
+    <div class="info-panel mt-3">
+      You should see <strong>Active: active (running)</strong> in green text. Press <strong>q</strong> to exit the
+      status view.
+    </div>
+
+    <div class="troubleshoot-panel">
+      <h6><i class="fa-solid fa-triangle-exclamation me-2"></i>Troubleshooting</h6>
+      <ul>
+        <li><strong>"Permission denied"</strong>: Make sure you use <code>sudo bash</code> at the end of the command.
+        </li>
+        <li><strong>"curl: command not found"</strong>: Install curl using your package manager.</li>
+        <li><strong>"venv module not found"</strong>: Install <code>python3-venv</code> (e.g.,
+          <code>sudo apt install python3-venv</code>).
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-3">
+  <div class="step-heading">
+    <span class="step-pill">Step 3</span>
+    <span class="label">Uninstall (Optional)</span>
+  </div>
+
+  <div class="step-body">
+    <p>To remove the agent and service:</p>
+
+    <div class="code-box" id="linuxUninstall">
+      sudo systemctl stop tenshiguard-agent
+      sudo systemctl disable tenshiguard-agent
+      sudo rm /etc/systemd/system/tenshiguard-agent.service
+      sudo rm -rf /opt/tenshiguard
+      sudo systemctl daemon-reload
+    </div>
+
+    <button class="copy-btn danger" onclick="copyFrom('linuxUninstall', this)">
+      <i class="fa-solid fa-trash-can"></i> Copy Uninstall Commands
+    </button>
+  </div>
+</div>
+<div class="warning-panel mt-3">
+  <strong><i class="fa-solid fa-triangle-exclamation me-1"></i> Security note:</strong>
+  Only install the agent on machines you control and trust. This installer ties the
+  device to <strong>{{ org.name }}</strong>.
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "install/base_install.html" %}
+{% block title %}Install TenshiGuard Agent – Linux{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="install-header fade-in">
+  <img src="{{ url_for('static', filename='images/linux_icon.png') }}" alt="Linux Icon">
+  <h2>TenshiGuard – Linux Agent Installer</h2>
+  <p>Install the lightweight monitoring agent for servers, VMs, and desktops.</p>
+</div>
+
+<!-- Installer Card -->
+<div class="install-card fade-in">
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-number">1</div>
+    <div>
+      <h4>Run This Command in <span style="color:#0dcaf0;">Terminal</span></h4>
+
+      <p class="text-muted small">Works on Ubuntu, Debian, Kali, CentOS, AlmaLinux, Rocky, RHEL & most Linux servers.</p>
+
+      <div class="code-box" id="linuxCmdBox">
+curl -sSL "{{ url_for('agent_installer_bp.serve_install_script', 
+                      org_token=org_token, _external=True) }}" | sudo bash
+      </div>
+
+      <button class="copy-btn" onclick="copyCmd('linuxCmdBox', this)">
+        <i class="fa-solid fa-copy me-1"></i> Copy Command
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-number">2</div>
+    <div>
+      <h4>Installer Will Automatically</h4>
+
+      <ul style="opacity: 0.95;">
+        <li>✔ Install Python3, pip & curl (if missing)</li>
+        <li>✔ Create <code>/opt/tenshiguard</code></li>
+        <li>✔ Download <code>agent_client.py</code></li>
+        <li>✔ Register your device under <b>{{ org.name }}</b></li>
+        <li>✔ Create a <b>systemd service</b></li>
+        <li>✔ Start real-time telemetry: CPU/MEM, heartbeats, events</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-number">3</div>
+    <div>
+      <h4>Verify Agent Status</h4>
+
+      <div class="code-box" id="statusBox">
+sudo systemctl status tenshiguard-agent --no-pager
+      </div>
+
+      <button class="copy-btn" onclick="copyCmd('statusBox', this)">
+        <i class="fa-solid fa-copy me-1"></i> Copy
+      </button>
+
+      <p class="small text-muted mt-2">The service should show “active (running)”.</p>
+
+      <h6 class="mt-3">View live logs:</h6>
+
+      <div class="code-box" id="logBox">
+sudo journalctl -u tenshiguard-agent -f
+      </div>
+
+      <button class="copy-btn" onclick="copyCmd('logBox', this)">
+        <i class="fa-solid fa-copy me-1"></i> Copy
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-number">4</div>
+    <div>
+      <h4>Verify Device on Dashboard</h4>
+      <p>
+        After installation, open your TenshiGuard Console →  
+        <b>Devices</b> and you will see the new Linux server appear automatically.
+      </p>
+      <p class="small text-accent">
+        Heartbeats and CPU/MEM updates are sent every 15 seconds.
+      </p>
+    </div>
+  </div>
+
+  <!-- UNINSTALL -->
+  <div class="step">
+    <div class="step-number warn">!</div>
+    <div>
+      <h4 class="text-danger">Uninstall Agent</h4>
+
+      <div class="code-box" id="uninstallBox">
+sudo systemctl stop tenshiguard-agent
+sudo systemctl disable tenshiguard-agent
+sudo rm -f /etc/systemd/system/tenshiguard-agent.service
+sudo systemctl daemon-reload
+sudo rm -rf /opt/tenshiguard
+      </div>
+
+      <button class="copy-btn red" onclick="copyCmd('uninstallBox', this)">
+        <i class="fa-solid fa-trash me-1"></i> Copy Uninstall Script
+      </button>
+    </div>
+  </div>
+
+  <!-- Full Guide Link -->
+  <div class="text-center fade-in" style="margin-top:25px;">
+    <a href="{{ url_for('agent_installer_bp.linux_guide', org_token=org_token) }}"
+       target="_blank"
+       class="full-guide-btn">
+      <i class="fa-solid fa-book me-1"></i> View Full Linux Guide
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyCmd(id, btn) {
+    const el = document.getElementById(id);
+    navigator.clipboard.writeText(el.innerText.trim()).then(() => {
+        btn.innerHTML = "✔ Copied!";
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-copy me-1"></i> Copy';
+        }, 1500);
+    });
+}
+</script>
+{% endblock %}

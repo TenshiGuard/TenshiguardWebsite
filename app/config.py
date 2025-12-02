@@ -1,84 +1,82 @@
 import os
+from pathlib import Path
 
 # =========================================================
 # 📦 Base Directory Setup
 # =========================================================
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = Path(__file__).resolve().parent
+INSTANCE_DIR = BASE_DIR / "instance"
+INSTANCE_DIR.mkdir(exist_ok=True)
 
-
+# =========================================================
+# ⚙️ Unified Configuration Class
+# =========================================================
 class Config:
     # =========================================================
-    # 🔹 Core Application Settings
+    # 🔹 Core Application
     # =========================================================
-    SECRET_KEY = os.environ.get("SECRET_KEY", "supersecretkey-change-this")
+    SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey-change-this")
 
-    # Database URI (SQLite for dev, can be PostgreSQL/MySQL later)
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
+    # Database (SQLite by default)
+    SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
-        "sqlite:///" + os.path.join(BASE_DIR, "instance", "tenshiguard.db")
+        f"sqlite:///{INSTANCE_DIR / 'tenshiguard.db'}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
 
-    # =========================================================
-    # 🔹 Mail Configuration (Flask-Mail)
-    # Used for password reset, alerts, notifications
-    # =========================================================
-    MAIL_SERVER = os.environ.get("MAIL_SERVER", "localhost")
-    MAIL_PORT = int(os.environ.get("MAIL_PORT", "8025"))  # Debug SMTP port
-    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "False").lower() in ("true", "1")
-    MAIL_USE_SSL = os.environ.get("MAIL_USE_SSL", "False").lower() in ("true", "1")
-    MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
-    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
-    MAIL_DEFAULT_SENDER = os.environ.get(
-        "MAIL_DEFAULT_SENDER",
-        "TenshiGuard <noreply@tenshiguard.local>"
-    )
-
-    # =========================================================
-    # 🔹 Security Tokens (for password reset, MFA, etc.)
-    # =========================================================
-    SECURITY_TOKEN_EXPIRATION = int(os.environ.get("SECURITY_TOKEN_EXPIRATION", 3600))  # 1 hour
-
-    # MFA optional toggle
-    MFA_ENABLED = os.environ.get("MFA_ENABLED", "True").lower() in ("true", "1")
-
-    # =========================================================
-    # 🔹 Alert Integrations (Twilio, optional)
-    # =========================================================
-    # These are safe to leave blank — system will auto-disable calls if unset
-    TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
-    TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
-    TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER", "")
-
-    # =========================================================
-    # 🔹 Billing / Payment (for future upgrade)
-    # =========================================================
-    STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "")
-    STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
-    STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
-
-    # =========================================================
-    # 🔹 Wazuh Integration (future use)
-    # =========================================================
-    WAZUH_API_URL = os.environ.get("WAZUH_API_URL", "https://localhost:55000")
-    WAZUH_API_USER = os.environ.get("WAZUH_API_USER", "wazuh")
-    WAZUH_API_PASS = os.environ.get("WAZUH_API_PASS", "wazuh")
-
-    # =========================================================
-    # 🔹 Flask App Configuration
-    # =========================================================
-    # Enable debugging features (for development)
-    DEBUG = os.environ.get("FLASK_DEBUG", "True").lower() in ("true", "1")
-
-    # Limit file uploads (for future log imports)
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
-
-    # Enable CORS for frontend integration
+    DEBUG = os.getenv("FLASK_DEBUG", "True").lower() in ("1", "true")
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB uploads
     CORS_HEADERS = "Content-Type"
 
     # =========================================================
-    # 🔹 Paths & Instance Management
+    # 🔹 Mail (for alerts, password reset)
     # =========================================================
-    INSTANCE_FOLDER_PATH = os.path.join(BASE_DIR, "instance")
-    if not os.path.exists(INSTANCE_FOLDER_PATH):
-        os.makedirs(INSTANCE_FOLDER_PATH, exist_ok=True)
+    MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
+    MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
+    MAIL_USE_TLS = os.getenv("MAIL_USE_TLS", "True").lower() in ("1", "true")
+    MAIL_USE_SSL = os.getenv("MAIL_USE_SSL", "False").lower() in ("1", "true")
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME", "")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")
+    MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER", "TenshiGuard <noreply@tenshiguard.local>")
+
+    # =========================================================
+    # 🔹 Multi-Factor & Security
+    # =========================================================
+    SECURITY_TOKEN_EXPIRATION = int(os.getenv("SECURITY_TOKEN_EXPIRATION", 3600))  # 1 hour
+    MFA_ENABLED = os.getenv("MFA_ENABLED", "True").lower() in ("1", "true")
+
+    # =========================================================
+    # 🔹 Alert Integrations (Twilio)
+    # =========================================================
+    TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")
+    TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "")
+    TWILIO_FROM_NUMBER = os.getenv("TWILIO_FROM_NUMBER", "")
+
+    # =========================================================
+    # 🔹 Billing / Payment (Stripe)
+    # =========================================================
+    STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY", "")
+    STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
+    STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+
+    # =========================================================
+    # 🔹 Wazuh Integration (future live data)
+    # =========================================================
+    WAZUH_API_URL = os.getenv("WAZUH_API_URL", "https://localhost:55000")
+    WAZUH_API_USER = os.getenv("WAZUH_API_USER", "wazuh")
+    WAZUH_API_PASS = os.getenv("WAZUH_API_PASS", "wazuh")
+
+    # =========================================================
+    # 🔹 AI / OpenAI / Gemini Integration
+    # =========================================================
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
+
+    # =========================================================
+    # 🔹 Instance / Paths
+    # =========================================================
+    INSTANCE_FOLDER_PATH = str(INSTANCE_DIR)
+    APP_NAME = "TenshiGuard"
+

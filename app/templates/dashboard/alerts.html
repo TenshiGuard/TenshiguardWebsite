@@ -1,0 +1,199 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dash_content %}
+
+<!-- SYSTEM STATUS BANNER -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div id="sos-status-banner" class="card border-0 shadow-sm bg-success text-white">
+      <div class="card-body d-flex align-items-center justify-content-between p-4">
+        <div>
+          <h2 class="display-6 fw-bold mb-0"><i class="fa-solid fa-shield-halved me-2"></i> SYSTEM SECURE</h2>
+          <p class="mb-0 opacity-75">No critical threats detected in the last 24 hours.</p>
+        </div>
+        <div class="text-end">
+          <h1 class="display-1 fw-bold mb-0 opacity-25"><i class="fa-solid fa-check-circle"></i></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS FEED -->
+<div class="tg-card p-0 shadow-sm overflow-hidden">
+  <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark-subtle">
+    <h5 class="mb-0 text-white">
+      <i class="fa-solid fa-bell me-2 text-warning"></i> Real-Time SOS Feed
+    </h5>
+    <div>
+      <span class="badge bg-dark border border-secondary me-2" id="last-updated">
+        <i class="fa-solid fa-clock me-1"></i> Live
+      </span>
+      <a href="{{ url_for('dashboard.sos_preferences_page') }}" class="btn btn-sm btn-outline-light me-2">
+        <i class="fa-solid fa-gear me-1"></i> Prefs
+      </a>
+      <button id="trigger-test" class="btn btn-sm btn-outline-warning">
+        <i class="fa-solid fa-bug me-1"></i> Test Alert
+      </button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-dark table-striped table-hover align-middle mb-0">
+      <thead class="text-uppercase small text-muted">
+        <tr>
+          <th class="ps-4">Time (UTC)</th>
+          <th>Severity</th>
+          <th>Category</th>
+          <th>Threat Detail</th>
+          <th>Action Taken</th>
+          <th>Delivered</th>
+        </tr>
+      </thead>
+      <tbody id="alerts-rows" class="border-top-0">
+        <tr>
+          <td colspan="6" class="text-center py-5 text-muted">Loading security feed...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<script>
+  (async function () {
+    const rows = document.getElementById("alerts-rows");
+    const triggerBtn = document.getElementById("trigger-test");
+    const banner = document.getElementById("sos-status-banner");
+    const lastUpdated = document.getElementById("last-updated");
+
+    // ─────────────────────────────────────────────
+    // LOAD LATEST ALERTS
+    // ─────────────────────────────────────────────
+    async function loadAlerts() {
+      try {
+        const res = await fetch("/api/sos/latest");
+        const data = await res.json();
+        const alerts = data.alerts || [];
+        rows.innerHTML = "";
+
+        // UPDATE STATUS BANNER
+        let maxSev = "info";
+        if (alerts.some(a => a.severity === "critical")) maxSev = "critical";
+        else if (alerts.some(a => a.severity === "high")) maxSev = "high";
+
+        updateBanner(maxSev, alerts.length);
+
+        if (!alerts.length) {
+          rows.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted">No security alerts in the last 24 hours. System is clean.</td></tr>`;
+          return;
+        }
+
+        alerts.forEach(a => {
+          const sev = (a.severity || "info").toLowerCase();
+          const sevColor = {
+            critical: "danger",
+            high: "warning",
+            medium: "info",
+            low: "success",
+            info: "secondary"
+          }[sev] || "secondary";
+
+          const delivered = (a.sent_email || a.sent_sms)
+            ? [
+              a.sent_email ? '<i class="fa-solid fa-envelope text-primary" title="Email Sent"></i>' : null,
+              a.sent_sms ? '<i class="fa-solid fa-mobile-screen text-info" title="SMS Sent"></i>' : null
+            ].filter(Boolean).join(" ")
+            : '<span class="text-muted opacity-50">-</span>';
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+          <td class="ps-4 text-nowrap font-monospace small text-muted">${a.time ? a.time.split("T")[1].slice(0, 8) : "-"}</td>
+          <td><span class="badge bg-${sevColor} text-uppercase">${sev}</span></td>
+          <td class="text-capitalize text-info">${a.category}</td>
+          <td>
+            <div class="fw-bold text-white">${a.action || "Security Event"}</div>
+            <div class="small text-muted text-truncate" style="max-width: 300px;">${a.detail || a.mitigation || ""}</div>
+          </td>
+          <td>
+             <div class="small text-warning"><i class="fa-solid fa-shield-virus me-1"></i> ${a.mitigation || "Monitor"}</div>
+          </td>
+          <td class="text-center">${delivered}</td>
+        `;
+          rows.appendChild(tr);
+        });
+
+        // Update timestamp
+        const now = new Date();
+        lastUpdated.innerHTML = `<i class="fa-solid fa-clock me-1"></i> ${now.toLocaleTimeString()}`;
+
+      } catch (err) {
+        console.error(err);
+        rows.innerHTML = `<tr><td colspan="6" class="text-danger text-center py-4">Error loading feed: ${err}</td></tr>`;
+      }
+    }
+
+    function updateBanner(severity, count) {
+      if (!banner) return;
+
+      // Reset classes
+      banner.className = "card border-0 shadow-sm text-white transition-all";
+      const icon = banner.querySelector("h1 i");
+      const title = banner.querySelector("h2");
+      const desc = banner.querySelector("p");
+
+      if (severity === "critical") {
+        banner.classList.add("bg-danger", "animate__animated", "animate__pulse");
+        title.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-2"></i> CRITICAL THREATS DETECTED';
+        desc.innerHTML = `${count} critical security events require immediate attention.`;
+        icon.className = "fa-solid fa-radiation";
+      } else if (severity === "high") {
+        banner.classList.add("bg-warning", "text-dark");
+        title.innerHTML = '<i class="fa-solid fa-circle-exclamation me-2"></i> SECURITY WARNING';
+        desc.innerHTML = `${count} high-severity events detected. Investigate immediately.`;
+        icon.className = "fa-solid fa-triangle-exclamation";
+      } else {
+        banner.classList.add("bg-success");
+        title.innerHTML = '<i class="fa-solid fa-shield-halved me-2"></i> SYSTEM SECURE';
+        desc.innerHTML = "No critical threats detected in the last 24 hours.";
+        icon.className = "fa-solid fa-check-circle";
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // TEST ALERT BUTTON → /api/sos/trigger
+    // ─────────────────────────────────────────────
+    triggerBtn.addEventListener("click", async () => {
+      triggerBtn.disabled = true;
+      triggerBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Sending...';
+
+      try {
+        await fetch("/api/sos/trigger", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: "Manual SOS Trigger Test",
+            message: "This is a test alert to verify real-time system functionality.",
+            severity: "critical", // Force critical to test banner
+            category: "system"
+          })
+        });
+
+        await loadAlerts();
+
+      } finally {
+        triggerBtn.disabled = false;
+        triggerBtn.innerHTML = '<i class="fa-solid fa-bug me-1"></i> Test Alert';
+      }
+    });
+
+
+    // ─────────────────────────────────────────────
+    // INITIAL LOAD + AUTO REFRESH
+    // ─────────────────────────────────────────────
+    await loadAlerts();
+    setInterval(loadAlerts, 5000); // Faster refresh (5s)
+
+  })();
+</script>
+
+{% endblock %}

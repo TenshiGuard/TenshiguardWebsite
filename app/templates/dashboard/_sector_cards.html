@@ -1,0 +1,30 @@
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Total Users</h6>
+        <h3 class="fw-bold text-primary">{{ total_users or 0 }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Devices Connected</h6>
+        <h3 class="fw-bold text-success">{{ total_devices or 0 }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Status</h6>
+        <h5 class="fw-bold text-{{ 'success' if org and org.status == 'active' else 'warning' }}">
+          {{ org.status|capitalize if org else 'Pending' }}
+        </h5>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,165 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dash_content %}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <h6 class="mb-0">
+    <i class="fa-solid fa-chart-line text-warning me-2"></i>
+    Failed Login Trend (last 24h)
+  </h6>
+
+  <!-- 🔥 New Sparkline Output -->
+  <span id="trend-badge"
+        class="badge bg-secondary text-light small">
+      Loading…
+  </span>
+</div>
+
+
+<!-- 🔹 TOP METRICS ROW -->
+<div class="row g-3 mb-3">
+  <!-- Devices Summary -->
+  <div class="col-md-4">
+    <div class="tg-card p-3 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="text-muted small">Devices</span>
+        <i class="fa-solid fa-desktop text-info"></i>
+      </div>
+      <h3 class="mb-2">
+        <span id="metric-dev-total">–</span>
+        <small class="text-muted fs-6"> total</small>
+      </h3>
+      <div class="d-flex justify-content-between small">
+        <span class="text-success">
+          <i class="fa-solid fa-circle me-1"></i> Online:
+          <strong id="metric-dev-online">–</strong>
+        </span>
+        <span class="text-danger">
+          <i class="fa-regular fa-circle me-1"></i> Offline:
+          <strong id="metric-dev-offline">–</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events Summary -->
+  <div class="col-md-4">
+    <div class="tg-card p-3 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="text-muted small">Events (Last 24h)</span>
+        <i class="fa-solid fa-wave-square text-warning"></i>
+      </div>
+      <h3 class="mb-2">
+        <span id="metric-ev-24h">–</span>
+        <small class="text-muted fs-6"> total</small>
+      </h3>
+      <div class="small">
+        <span class="text-warning">
+          <i class="fa-solid fa-triangle-exclamation me-1"></i>
+          Failed logins:
+          <strong id="metric-ev-failed24">–</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Severity Breakdown -->
+  <div class="col-md-4">
+    <div class="tg-card p-3 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="text-muted small">Severity Breakdown</span>
+        <i class="fa-solid fa-fire-flame-curved text-danger"></i>
+      </div>
+      <div class="d-flex flex-wrap gap-2 small">
+        <span class="badge bg-danger">
+          HIGH: <span id="sev-high">0</span>
+        </span>
+        <span class="badge bg-warning text-dark">
+          MED: <span id="sev-medium">0</span>
+        </span>
+        <span class="badge bg-info text-dark">
+          INFO: <span id="sev-info">0</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔹 MAIN CONTENT ROW -->
+<div class="row g-3">
+  <!-- Recent Events -->
+  <div class="col-lg-7">
+    <div class="tg-card p-3 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="mb-0">
+          <i class="fa-solid fa-clock-rotate-left text-accent me-2"></i>
+          Recent Events
+        </h6>
+        <small class="text-muted">Last 10 events</small>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover table-sm align-middle mb-0">
+          <thead class="small text-muted">
+            <tr>
+              <th>Time (UTC)</th>
+              <th>Severity</th>
+              <th>Category</th>
+              <th>Action</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody id="recent-events-body">
+            <tr>
+              <td colspan="5" class="text-center text-muted small py-3">
+                <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                Loading recent events...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Devices -->
+  <div class="col-lg-5">
+    <div class="tg-card p-3 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="mb-0">
+          <i class="fa-solid fa-shield-halved text-success me-2"></i>
+          Top Devices by Activity
+        </h6>
+        <small class="text-muted">Events in last 24h</small>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover table-sm align-middle mb-0">
+          <thead class="small text-muted">
+            <tr>
+              <th>Device</th>
+              <th>Events</th>
+              <th>OS</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="top-devices-body">
+            <tr>
+              <td colspan="4" class="text-center text-muted small py-3">
+                <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                Loading device activity...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <small class="text-muted d-block mt-2">
+        Tip: High event count on a single device may indicate targeted activity or misconfiguration.
+      </small>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/dashboard_overview.js') }}"></script>
+{% endblock %}

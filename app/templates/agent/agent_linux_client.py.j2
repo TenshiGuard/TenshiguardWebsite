@@ -1,0 +1,285 @@
+#!/usr/bin/env python3
+"""
+🧠 TenshiGuard Linux Agent Client
+- Registers with the server
+- Sends periodic heartbeats
+- Monitors /var/log/auth.log for failed logins
+- Sends security events to /api/agent/event
+"""
+
+import os
+import time
+import json
+import socket
+import uuid
+import platform
+import threading
+import subprocess
+from datetime import datetime, timezone
+
+import requests
+
+# These are injected by Flask when rendering the template
+BASE_URL = "{{ BASE_URL }}"
+ORG_TOKEN = "{{ ORG_TOKEN }}"
+
+LOG_DIR = "/opt/tenshiguard"
+LOG_PATH = os.path.join(LOG_DIR, "agent.log")
+
+# ============================================================
+# 🔐 Logging helper
+# ============================================================
+
+def log(msg: str) -> None:
+    """Log to stdout and /opt/tenshiguard/agent.log"""
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z")
+    line = f"[agent] [{ts}] {msg}"
+    print(line, flush=True)
+
+    try:
+        os.makedirs(LOG_DIR, exist_ok=True)
+        with open(LOG_PATH, "a", encoding="utf-8") as f:
+            f.write(line + "\n")
+    except Exception:
+        # Do not crash agent if logging fails
+        pass
+
+# ============================================================
+# 🧩 System Info
+# ============================================================
+
+def get_mac() -> str:
+    try:
+        mac = uuid.getnode()
+        return ":".join(("%012X" % mac)[i:i + 2] for i in range(0, 12, 2))
+    except Exception:
+        return "unknown"
+
+def get_ip() -> str:
+    try:
+        return socket.gethostbyname(socket.gethostname())
+    except Exception:
+        return "127.0.0.1"
+
+def system_info() -> dict:
+    return {
+        "hostname": platform.node(),
+        "os": platform.platform(),
+        "ip": get_ip(),
+        "mac": get_mac(),
+    }
+
+# ============================================================
+# 🌐 Generic API helpers
+# ============================================================
+
+def api_post(path: str, payload: dict, timeout: int = 10):
+    url = f"{BASE_URL}{path}"
+    try:
+        r = requests.post(url, json=payload, timeout=timeout)
+        log(f"HTTP POST {path} -> {r.status_code}")
+        return r
+    except Exception as e:
+        log(f"HTTP POST {path} error: {e}")
+        return None
+
+# ============================================================
+# 📊 Heartbeat metrics
+# ============================================================
+
+def get_cpu() -> float:
+    try:
+        import psutil
+        return float(psutil.cpu_percent(interval=1))
+    except Exception:
+        return 0.0
+
+def get_mem() -> float:
+    try:
+        import psutil
+        return float(psutil.virtual_memory().percent)
+    except Exception:
+        return 0.0
+
+# ============================================================
+# 🟢 Registration + Heartbeat
+# ============================================================
+
+def register_agent(info: dict) -> bool:
+    payload = {
+        "org_token": ORG_TOKEN,
+        "hostname": info["hostname"],
+        "mac": info["mac"],
+        "os": info["os"],
+        "ip": info["ip"],
+        "agent_version": "0.2.0",
+    }
+    log(f"Registering agent with payload: {payload}")
+    r = api_post("/api/agent/register", payload)
+    if r is None:
+        return False
+
+    try:
+        data = r.json()
+    except Exception:
+        data = {"raw": r.text}
+
+    log(f"Register response {r.status_code}: {data}")
+    if r.status_code in (200, 201):
+        # Also send an explicit "registered" event for history
+        send_event(
+            category="agent",
+            action="registered",
+            detail=f"Agent registered on {info['hostname']} ({info['mac']})",
+            severity="low",
+            info=info,
+        )
+        return True
+    return False
+
+def send_heartbeat_loop(info: dict):
+    """Infinite loop sending heartbeats every 15s."""
+    while True:
+        cpu_val = get_cpu()
+        mem_val = get_mem()
+
+        payload = {
+            "org_token": ORG_TOKEN,
+            "mac": info["mac"],
+            "hostname": info["hostname"],
+            "os": info["os"],
+            "ip": info["ip"],
+            "agent_version": "0.2.0",
+
+            # ✅ Option C: send BOTH styles so server code is always happy
+            "cpu": cpu_val,
+            "cpu_percent": cpu_val,
+            "memory": mem_val,
+            "mem_percent": mem_val,
+        }
+
+        r = api_post("/api/agent/heartbeat", payload, timeout=10)
+        if r is not None:
+            log(f"💓 Heartbeat -> {r.status_code} {r.text[:200]}")
+        else:
+            log("💓 Heartbeat failed (no response)")
+
+        time.sleep(15)
+
+# ============================================================
+# 🚨 Event sender
+# ============================================================
+
+def send_event(category: str, action: str, detail: str, severity: str = "info", info: dict = None):
+    if info is None:
+        info = system_info()
+
+    payload = {
+        "org_token": ORG_TOKEN,
+        "mac": info["mac"],
+        "category": category,
+        "action": action,
+        "detail": detail,
+        "severity": severity,
+    }
+    r = api_post("/api/agent/event", payload, timeout=5)
+    if r is not None:
+        log(f"[EVENT] {category}/{action} -> {r.status_code}")
+    else:
+        log(f"[EVENT] {category}/{action} -> failed")
+
+# ============================================================
+# 🔍 Auth Log Monitoring (Failed Logins)
+# ============================================================
+
+AUTH_LOG_PATHS = [
+    "/var/log/auth.log",   # Debian/Ubuntu/Kali
+    "/var/log/secure",     # RHEL/CentOS
+]
+
+def detect_auth_log_path() -> str:
+    for p in AUTH_LOG_PATHS:
+        if os.path.exists(p):
+            return p
+    return ""
+
+def monitor_auth_log(info: dict):
+    """
+    Tail auth log and send events for failed login attempts.
+    """
+    path = detect_auth_log_path()
+    if not path:
+        log("⚠️ No auth log file found (/var/log/auth.log or /var/log/secure). "
+            "Failed login monitoring disabled.")
+        return
+
+    log(f"🧠 Monitoring auth log for failed logins: {path}")
+
+    # Use 'tail -F' so it follows file rotation
+    try:
+        proc = subprocess.Popen(
+            ["tail", "-n", "0", "-F", path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except Exception as e:
+        log(f"❌ Failed to start tail on {path}: {e}")
+        return
+
+    patterns = ("Failed password", "authentication failure", "Invalid user", "invalid user")
+
+    while True:
+        line = proc.stdout.readline()
+        if not line:
+            # no new line, small sleep
+            time.sleep(0.5)
+            continue
+
+        stripped = line.strip()
+        if any(p in stripped for p in patterns):
+            detail = (
+                f"{stripped} | "
+                f"Mitigation: Review SSH access, lock or investigate offending accounts/IPs, "
+                f"and enable Fail2Ban or similar."
+            )
+            log(f"🚨 Failed login detected in auth.log: {stripped}")
+            send_event(
+                category="auth",
+                action="failed_login",
+                detail=detail,
+                severity="medium",
+                info=info,
+            )
+
+# ============================================================
+# 🚀 Entry Point
+# ============================================================
+
+def main():
+    log("💻 Starting TenshiGuard Linux Agent Service...")
+    info = system_info()
+    log(f"System info: {info}")
+
+    # Try registration with simple retry
+    for attempt in range(3):
+        if register_agent(info):
+            log("✅ Agent registration succeeded.")
+            break
+        else:
+            log(f"❌ Registration failed (attempt {attempt + 1}/3). Retrying in 30s...")
+            time.sleep(30)
+    else:
+        log("❌ Registration failed after 3 attempts. Exiting.")
+        return
+
+    # Start auth log monitor thread
+    t = threading.Thread(target=monitor_auth_log, args=(info,), daemon=True)
+    t.start()
+    log("🧵 Auth log monitor thread started.")
+
+    # Run heartbeat loop in main thread
+    send_heartbeat_loop(info)
+
+if __name__ == "__main__":
+    main()

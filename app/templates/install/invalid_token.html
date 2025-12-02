@@ -1,0 +1,12 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Invalid Token{% endblock %}
+
+{% block dash_content %}
+<div class="container text-center py-5">
+  <div class="card bg-dark text-light border-danger shadow-lg p-4 mx-auto" style="max-width: 600px;">
+    <h3 class="text-danger mb-3">⚠ Invalid or Expired Token</h3>
+    <p>{{ message }}</p>
+    <p class="text-muted small">If you believe this is an error, please contact your TenshiGuard administrator.</p>
+  </div>
+</div>
+{% endblock %}

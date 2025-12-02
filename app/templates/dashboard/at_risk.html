@@ -1,0 +1,73 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}At-Risk Devices · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 fw-semibold">At-Risk Devices</h4>
+    <a href="{{ url_for('dashboard.admin_dashboard') }}" class="btn btn-outline-light btn-sm">
+      <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <div class="card tg-card shadow-card">
+    <div class="card-header">
+      <strong>Detected Risks</strong>
+      <small class="text-muted d-block">Real-time simulated monitoring results</small>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table align-middle table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Host</th>
+            <th>OS</th>
+            <th>IP</th>
+            <th>Status</th>
+            <th>Risk Type</th>
+            <th>Severity</th>
+            <th>CPU</th>
+            <th>Memory</th>
+            <th>Last Seen</th>
+            <th>Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in risky %}
+          <tr>
+            <td>{{ d.hostname }}</td>
+            <td>{{ d.os }}</td>
+            <td>{{ d.ip }}</td>
+            <td>
+              {% if d.status == 'online' %}
+              <span class="badge bg-success">Online</span>
+              {% else %}
+              <span class="badge bg-danger">Offline</span>
+              {% endif %}
+            </td>
+            <td>{{ d.risk_type }}</td>
+            <td>
+              {% if d.severity == 'critical' %}
+                <span class="badge bg-danger">Critical</span>
+              {% elif d.severity == 'high' %}
+                <span class="badge bg-warning text-dark">High</span>
+              {% elif d.severity == 'medium' %}
+                <span class="badge bg-info text-dark">Medium</span>
+              {% else %}
+                <span class="badge bg-secondary">Low</span>
+              {% endif %}
+            </td>
+            <td>{{ d.cpu }}%</td>
+            <td>{{ d.mem }}%</td>
+            <td>{{ d.last_seen.strftime("%Y-%m-%d %H:%M UTC") }}</td>
+            <td class="small text-muted">{{ d.mitigation }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="10" class="text-muted text-center">No devices at risk.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block dash_content %}
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-1 fw-bold">Device Management</h4>
+      <p class="text-muted mb-0">Monitor and manage connected endpoints.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('dashboard.setup_agent_page') }}" class="btn btn-accent">
+        <i class="fa-solid fa-plus me-2"></i> Add Device
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="tg-card p-3 h-100 border-start border-4 border-primary">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted small text-uppercase fw-bold">Total Devices</div>
+            <h3 class="mb-0 fw-bold">{{ stats.total }}</h3>
+          </div>
+          <div class="text-primary opacity-50"><i class="fa-solid fa-desktop fa-2x"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="tg-card p-3 h-100 border-start border-4 border-success">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted small text-uppercase fw-bold">Online</div>
+            <h3 class="mb-0 fw-bold text-success">{{ stats.online }}</h3>
+          </div>
+          <div class="text-success opacity-50"><i class="fa-solid fa-signal fa-2x"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="tg-card p-3 h-100 border-start border-4 border-warning">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted small text-uppercase fw-bold">High Risk</div>
+            <h3 class="mb-0 fw-bold text-warning">{{ stats.high_risk }}</h3>
+          </div>
+          <div class="text-warning opacity-50"><i class="fa-solid fa-triangle-exclamation fa-2x"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="tg-card p-3 h-100 border-start border-4 border-danger">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted small text-uppercase fw-bold">Critical</div>
+            <h3 class="mb-0 fw-bold text-danger">{{ stats.critical }}</h3>
+          </div>
+          <div class="text-danger opacity-50"><i class="fa-solid fa-skull fa-2x"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="tg-card p-3 mb-4">
+    <form method="GET" action="{{ url_for('dashboard.devices') }}" class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label text-muted small fw-bold">Risk Level</label>
+        <select name="risk" class="form-select bg-dark text-light border-secondary">
+          <option value="all" {% if risk_filter=='all' %}selected{% endif %}>All Levels</option>
+          <option value="low" {% if risk_filter=='low' %}selected{% endif %}>Low Risk</option>
+          <option value="medium" {% if risk_filter=='medium' %}selected{% endif %}>Medium Risk</option>
+          <option value="high" {% if risk_filter=='high' %}selected{% endif %}>High Risk</option>
+          <option value="critical" {% if risk_filter=='critical' %}selected{% endif %}>Critical Risk</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label text-muted small fw-bold">Status</label>
+        <select name="status" class="form-select bg-dark text-light border-secondary">
+          <option value="all" {% if status_filter=='all' %}selected{% endif %}>All Statuses</option>
+          <option value="online" {% if status_filter=='online' %}selected{% endif %}>Online</option>
+          <option value="offline" {% if status_filter=='offline' %}selected{% endif %}>Offline</option>
+          <option value="quarantined" {% if status_filter=='quarantined' %}selected{% endif %}>Quarantined</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-light w-100">
+          <i class="fa-solid fa-filter me-2"></i> Filter
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Devices Table -->
+  <div class="tg-card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Device Name</th>
+            <th>IP Address</th>
+            <th>MAC Address</th>
+            <th>OS</th>
+            <th>Status</th>
+            <th>Risk Level</th>
+            <th>Last Seen</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for device in devices %}
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="me-3">
+                  {% if device.os|lower == 'windows' %}
+                  <i class="fa-brands fa-windows fa-lg text-info"></i>
+                  {% elif device.os|lower == 'linux' %}
+                  <i class="fa-brands fa-linux fa-lg text-warning"></i>
+                  {% elif device.os|lower == 'macos' %}
+                  <i class="fa-brands fa-apple fa-lg text-light"></i>
+                  {% else %}
+                  <i class="fa-solid fa-desktop fa-lg text-muted"></i>
+                  {% endif %}
+                </div>
+                <div>
+                  <div class="fw-bold">{{ device.device_name }}</div>
+                  <div class="small text-muted">ID: {{ device.id }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="font-monospace small">{{ device.ip or 'N/A' }}</td>
+            <td class="font-monospace small">{{ device.mac }}</td>
+            <td>{{ device.os }}</td>
+            <td>
+              {% if device.status == 'online' %}
+              <span class="badge bg-success"><i class="fa-solid fa-circle me-1"></i> Online</span>
+              {% elif device.status == 'offline' %}
+              <span class="badge bg-secondary"><i class="fa-solid fa-power-off me-1"></i> Offline</span>
+              {% else %}
+              <span class="badge bg-danger">{{ device.status|title }}</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if device.risk_level == 'critical' %}
+              <span class="badge bg-critical text-uppercase">Critical</span>
+              {% elif device.risk_level == 'high' %}
+              <span class="badge bg-danger text-uppercase">High</span>
+              {% elif device.risk_level == 'medium' %}
+              <span class="badge bg-warning text-dark text-uppercase">Medium</span>
+              {% else %}
+              <span class="badge bg-success text-uppercase">Low</span>
+              {% endif %}
+            </td>
+            <td class="text-muted small">
+              {% if device.last_seen %}
+              {{ device.last_seen.strftime('%Y-%m-%d %H:%M') }}
+              {% else %}
+              Never
+              {% endif %}
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-light" title="View Details">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="8" class="text-center py-5 text-muted">
+              <i class="fa-solid fa-laptop-slash fa-3x mb-3 opacity-50"></i>
+              <p>No devices found matching your filters.</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

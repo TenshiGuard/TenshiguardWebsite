@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Possible C2 Traffic",
+    "severity": "critical",
+    "risk": 92,
+    "match": {
+      "dest_ip": ["185.193.88.23", "45.9.148.200"],
+      "dest_port": [4444, 8081, 1337]
+    },
+    "detail": "Outbound connection to known malicious C2 infrastructure"
+  }
+]

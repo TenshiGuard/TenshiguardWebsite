@@ -1,0 +1,294 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Profile · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h4 class="mb-0 fw-semibold text-white">Profile Overview</h4>
+      <p><span class="text-white-50 small">Username:</span> <strong>{{ user.username }}</strong></p>
+      <p><span class="text-white-50 small">Email:</span> {{ user.email }}</p>
+      <p>
+        <span class="text-white-50 small">Role:</span>
+        <span class="badge bg-info text-dark text-uppercase">{{ user.role }}</span>
+      </p>
+    </div>
+
+    <div class="col-md-6">
+      {% if org %}
+      <p><span class="text-white-50 small">Organization:</span> <strong>{{ org.name }}</strong></p>
+      <p>
+        <span class="text-white-50 small">Sector:</span>
+        <span class="badge bg-accent text-uppercase">{{ org.sector }}</span>
+      </p>
+      {% if sub %}
+      <p>
+        <span class="text-white-50 small">Current Plan:</span>
+        <span class="badge bg-info text-dark text-uppercase">{{ sub.plan }}</span>
+        {% if sub.sos_enabled %}
+        <span class="badge bg-warning text-dark ms-1">
+          <i class="fa-solid fa-bell me-1"></i>SOS Enabled
+        </span>
+        {% endif %}
+      </p>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- SOS Section (Visible only for Professional/Enterprise) -->
+  {% if sub and sub.plan.lower() != "basic" %}
+  <!-- SOS Contact Info Banner -->
+  <div class="alert alert-info shadow-sm mb-3" role="alert">
+    <i class="bi bi-info-circle"></i>
+    These contacts are used for SOS alerts and urgent notifications.
+  </div>
+
+  <!-- ✅ SOS Alert Contact Setup -->
+  {% if user.role == 'admin' and org %}
+  <hr class="my-4">
+  <h6 class="text-warning">
+    <i class="fa-solid fa-bell me-2"></i>SOS Alert Contact
+  </h6>
+  <p class="text-white-50 small mb-3">
+    These contact details are <strong>actively used for SOS alerts</strong> and urgent notifications.
+    Make sure they are accurate and monitored.
+  </p>
+
+  <form action="{{ url_for('dashboard.update_sos_contacts') }}" method="POST" class="mb-3">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="alert_email" class="form-label text-white">Alert Email</label>
+        <input type="email" id="alert_email" name="alert_email" value="{{ org.alert_email or '' }}"
+          class="form-control bg-dark text-white" placeholder="you@example.com">
+        <small class="text-white-50">All SOS email alerts will be sent to this address.</small>
+      </div>
+
+      <div class="col-md-6">
+        <label for="alert_phone" class="form-label text-white">Alert Phone (for SMS)</label>
+        <input type="text" id="alert_phone" name="alert_phone" value="{{ org.alert_phone or '' }}"
+          class="form-control bg-dark text-white" placeholder="+1 416-555-1234">
+        <small class="text-white-50">Used for critical SMS alerts when available.</small>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center mt-3">
+      <button type="submit" class="btn btn-success me-2">
+        <i class="fa-solid fa-floppy-disk me-1"></i> Save Contact
+      </button>
+      <a href="{{ url_for('dashboard.clear_sos_contacts') }}" class="btn btn-outline-danger">
+        <i class="fa-solid fa-trash-can me-1"></i> Remove Contact
+      </a>
+    </div>
+  </form>
+
+  <!-- Show current status visually -->
+  {% if org.alert_email or org.alert_phone %}
+  <div class="alert alert-success small mt-3">
+    <i class="fa-solid fa-circle-check me-2"></i>
+    SOS alerts are currently being sent to:
+    {% if org.alert_email %}<strong>{{ org.alert_email }}</strong>{% endif %}
+    {% if org.alert_phone %} (📱 {{ org.alert_phone }}){% endif %}
+  </div>
+  {% else %}
+  <div class="alert alert-warning small mt-3">
+    <i class="fa-solid fa-circle-exclamation me-2"></i>
+    No SOS contacts configured yet. Add an email or phone above.
+  </div>
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  <!-- End SOS Contact Form -->
+</div>
+</div>
+
+<!-- Sector Info -->
+{% if sector_info %}
+<div class="card tg-card mb-4">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <div>
+      <i class="fa-solid fa-shield-halved me-2 text-accent"></i>
+      <strong>{{ sector_info.name }}</strong>
+      <small class="d-block text-white-50">Sector Security & Compliance Overview</small>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <p class="text-white-50 small mb-3">{{ sector_info.description }}</p>
+
+    <div class="row">
+      <!-- Compliance Chart -->
+      <div class="col-md-5 text-center">
+        <canvas id="complianceChart" width="200" height="200"></canvas>
+        <small class="text-white-50 d-block mt-2">Compliance Coverage</small>
+
+        <!-- Animated Audit Progress -->
+        <div class="audit-progress mt-4">
+          <div class="audit-progress-bar" style="width: {{ compliance_score }}%;"></div>
+        </div>
+
+        <!-- Tooltip Rotation -->
+        <div class="text-center small mt-2 text-accent tg-tooltip">
+          Hover to see what improved your compliance
+          <div class="tooltip-content" id="tg-rotate-tooltip">
+            {% for item in breakdown if item.compliant %}
+            ✅ {{ item.name }} improved<br>
+            {% else %}
+            No new improvements yet.
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Next Audit Countdown -->
+        <div class="mt-4">
+          <div class="progress" style="height: 10px; background-color: #21262D; border-radius: 5px;">
+            {% set progress = ((now_utc.day % 90) / 90 * 100)|round(0) %}
+            <div class="progress-bar bg-accent" role="progressbar" style="width: {{ progress }}%;"
+              aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+            </div>
+          </div>
+          <small class="text-white-50 d-block mt-2">
+            Next Audit Due:
+            <strong>{{ (now_utc + timedelta(days=90)).strftime('%B %d, %Y') }}</strong> · 90-Day Cycle
+          </small>
+        </div>
+      </div>
+
+      <!-- Compliance Details -->
+      <div class="col-md-7">
+        <h6 class="fw-semibold text-accent mb-2">Compliance Frameworks</h6>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          {% for item in sector_info.compliance %}
+          <span class="badge bg-dark border border-accent small px-3 py-2">
+            <i class="fa-solid fa-lock me-1 text-accent"></i>{{ item }}
+          </span>
+          {% endfor %}
+        </div>
+
+        <!-- Compliance Breakdown Table -->
+        <h6 class="fw-semibold text-accent mb-2">Compliance Breakdown</h6>
+        <table class="table table-sm table-borderless align-middle text-white-50 small mb-3">
+          <thead>
+            <tr>
+              <th class="text-start">Framework</th>
+              <th class="text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in breakdown %}
+            <tr>
+              <td>{{ item.name }}</td>
+              <td class="text-center">
+                {% if item.compliant %}
+                <span class="badge bg-success"><i class="fa-solid fa-check"></i> Compliant</span>
+                {% else %}
+                <span class="badge bg-warning text-dark">
+                  <i class="fa-solid fa-hourglass-half"></i> In Progress
+                </span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- Key Priorities -->
+        <h6 class="fw-semibold text-accent mb-2">Key Security Priorities</h6>
+        <ul class="ps-3 mb-0">
+          {% for item in sector_info.priorities %}
+          <li class="small text-white-50">
+            <i class="fa-solid fa-circle-check me-2 text-success"></i>{{ item }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <hr class="border-secondary my-4">
+
+    <div class="row text-white-50 small">
+      <div class="col-md-6">
+        <strong class="text-accent">Last Compliance Audit:</strong>
+        {{ now_utc.strftime('%B %d, %Y') }}
+      </div>
+      <div class="col-md-6 text-md-end">
+        <strong class="text-accent">Next Review Due:</strong>
+        {{ (now_utc + timedelta(days=90)).strftime('%B %d, %Y') }}
+        <span class="badge bg-warning text-dark ms-2">
+          <i class="fa-solid fa-clock"></i> Scheduled
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Footer -->
+<div class="text-center mt-3">
+  <small class="text-white-50">
+    TenshiGuard™️ helps ensure your organization meets global cybersecurity compliance and monitoring standards.
+  </small>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById("complianceChart");
+    if (!ctx) return;
+
+    const readiness = {{ compliance_score|default (75)
+  }};
+
+  new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Compliant", "Pending"],
+      datasets: [{
+        data: [readiness, 100 - readiness],
+        backgroundColor: [
+          readiness > 90 ? "#00FF99" : (readiness > 80 ? "#00C8FF" : "#F0B429"),
+          "#21262D"
+        ],
+        borderWidth: 0,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      cutout: "75%",
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: readiness + "%",
+          color: "#C9D1D9",
+          font: { size: 20, weight: "bold" },
+          padding: { bottom: 10 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.label + ": " + ctx.parsed + "%"
+          }
+        }
+      }
+    }
+  });
+
+  const tooltip = document.getElementById("tg-rotate-tooltip");
+  if (tooltip) {
+    const lines = tooltip.innerHTML.trim().split("<br>").filter(line => line.length > 0);
+    if (lines.length > 1) {
+      let i = 0;
+      setInterval(() => {
+        tooltip.innerHTML = lines[i % lines.length];
+        i++;
+      }, 3000);
+    }
+  }
+});
+</script>
+{% endblock %}

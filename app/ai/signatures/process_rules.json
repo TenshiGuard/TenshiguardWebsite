@@ -1,0 +1,15 @@
+[
+    {
+        "id": "proc_mimikatz",
+        "name": "mimikatz",
+        "score": 80,
+        "description": "Credential dumping tool detected"
+    },
+    {
+        "id": "proc_powershell_enc",
+        "name": "powershell",
+        "path_pattern": "-enc",
+        "score": 50,
+        "description": "Encoded PowerShell command"
+    }
+]

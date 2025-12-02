@@ -1,0 +1,79 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Agent Setup · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h4 class="fw-semibold mb-0">Install TenshiGuard Agent</h4>
+      <small class="text-muted">
+        Choose your platform and run the installer to auto-register your endpoint.
+      </small>
+    </div>
+    <div class="text-end">
+      <span class="badge bg-secondary">Org Token</span>
+      <code class="small">{{ org_token }}</code>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs" id="installTabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#linux">Linux / Server</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#windows">Windows (PowerShell)</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#macos">macOS</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#android">Android (Termux)</button></li>
+  </ul>
+
+  <div class="tab-content border border-secondary border-top-0 p-3 rounded-bottom bg-dark text-light">
+    <div class="tab-pane fade show active" id="linux">
+      <p class="small text-muted">Run as root or with sudo on Linux / Server:</p>
+      <div class="input-group">
+        <input id="linuxCmd" class="form-control bg-secondary text-white" readonly
+               value="curl -sSL {{ base_url }}/install/agent/{{ org_token }} | sudo bash">
+        <button class="btn btn-outline-info" onclick="copyCmd('linuxCmd')">Copy</button>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="windows">
+      <p class="small text-muted">Open PowerShell as Administrator and run:</p>
+      <div class="input-group">
+        <input id="winCmd" class="form-control bg-secondary text-white" readonly
+               value="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;iwr {{ base_url }}/install/windows/{{ org_token }} -UseBasicParsing | iex&quot;">
+        <button class="btn btn-outline-info" onclick="copyCmd('winCmd')">Copy</button>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="macos">
+      <p class="small text-muted">Run in Terminal (macOS):</p>
+      <div class="input-group">
+        <input id="macCmd" class="form-control bg-secondary text-white" readonly
+               value="curl -sSL {{ base_url }}/install/macos/{{ org_token }} | bash">
+        <button class="btn btn-outline-info" onclick="copyCmd('macCmd')">Copy</button>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="android">
+      <p class="small text-muted">Run in Termux (Android):</p>
+      <div class="input-group">
+        <input id="andCmd" class="form-control bg-secondary text-white" readonly
+               value="pkg install -y python curl && curl -sSL {{ base_url }}/install/android/{{ org_token }} | bash">
+        <button class="btn btn-outline-info" onclick="copyCmd('andCmd')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="border-secondary my-4">
+  <h6 class="fw-semibold">Verify Installation</h6>
+  <pre class="bg-secondary text-white p-3 rounded small mb-0">
+sudo systemctl status tenshiguard-agent
+sudo journalctl -u tenshiguard-agent -f
+  </pre>
+</div>
+
+<script>
+function copyCmd(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.value);
+  alert("Copied to clipboard!");
+}
+</script>
+{% endblock %}

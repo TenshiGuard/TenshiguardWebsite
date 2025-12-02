@@ -1,67 +1,123 @@
-// app/static/js/dashboard_live.js
-(function(){
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('toggleSidebar');
-  if (toggleBtn && sidebar){
-    toggleBtn.addEventListener('click', () => {
-      const collapsed = sidebar.getAttribute('data-collapsed') === 'true';
-      sidebar.setAttribute('data-collapsed', String(!collapsed));
-      window.TENSHI = window.TENSHI || {};
-      window.TENSHI.collapsed = !collapsed;
-      toggleBtn.title = (!collapsed ? 'Expand' : 'Collapse');
-      toggleBtn.setAttribute('aria-label', (!collapsed ? 'Expand sidebar' : 'Collapse sidebar'));
-    });
-  }
+/* ============================================================
+   📊 TenshiGuard Dashboard Live Feed (v3.1)
+   Fetches KPI, charts & risk data every 10 seconds
+============================================================ */
 
-  // Live fake uptime clock
-  const elUptime = document.getElementById('kpi-uptime');
-  let t0 = Date.now();
-  function two(n){ return String(n).padStart(2,'0'); }
-  function tick(){
-    if (!elUptime) return;
-    const s = Math.floor((Date.now()-t0)/1000);
-    const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
-    elUptime.textContent = `${two(h)}:${two(m)}:${two(ss)}`;
-  }
-  setInterval(tick, 1000); tick();
+const API_DASHBOARD = "/api/dashboard/live";
+const API_ATRISK = "/api/dashboard/at_risk";
+let refreshInterval = 10000; // 10s auto-refresh
 
-  // KPI pulse
-  const elAlerts = document.getElementById('kpi-alerts');
-  const elAlertsTrend = document.getElementById('kpi-alerts-trend');
-  const elDevices = document.getElementById('kpi-devices');
-  const elDevicesTrend = document.getElementById('kpi-devices-trend');
+document.addEventListener("DOMContentLoaded", () => {
+  loadDashboardData();
+  setInterval(loadDashboardData, refreshInterval);
+});
 
-  function rand(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
-  function pulseKPIs(){
-    if (elAlerts){
-      const base = Number(elAlerts.dataset.base || rand(1,5));
-      const delta = [-1,0,1][rand(0,2)];
-      const next = Math.max(0, base + delta);
-      elAlerts.textContent = next;
-      elAlerts.dataset.base = String(next);
-      if (elAlertsTrend) elAlertsTrend.textContent = (delta >= 0 ? `▲ +${delta}` : `▼ ${delta}`) + ' past min';
-    }
-    if (elDevices){
-      const base = Number(elDevices.dataset.base || rand(15,30));
-      const delta = [-1,0,1][rand(0,2)];
-      const next = Math.max(0, base + delta);
-      elDevices.textContent = next;
-      elDevices.dataset.base = String(next);
-      if (elDevicesTrend) elDevicesTrend.textContent = (delta >= 0 ? `▲ +${delta}` : `▼ ${delta}`) + ' online';
-    }
-  }
-  setInterval(pulseKPIs, 7000); pulseKPIs();
+async function loadDashboardData() {
+  try {
+    const res = await fetch(API_DASHBOARD);
+    const json = await res.json();
+    if (json.status !== "ok") throw new Error("Invalid dashboard data");
 
-  // Refresh button fake latency
-  const refreshBtn = document.getElementById('btn-refresh-events');
-  if (refreshBtn){
-    refreshBtn.addEventListener('click', () => {
-      refreshBtn.disabled = true;
-      refreshBtn.textContent = 'Refreshing…';
-      setTimeout(() => {
-        refreshBtn.disabled = false;
-        refreshBtn.textContent = 'Refresh';
-      }, 900);
-    });
+    updateKPI(json.data.stats);
+    renderCharts(json.data.chart_data);
+  } catch (err) {
+    console.error("Dashboard fetch failed:", err);
   }
-})();
+}
+
+/* ---------------------------
+   📌 Update KPI Cards
+--------------------------- */
+function updateKPI(stats) {
+  const elTotal = document.getElementById("totalDevices");
+  const elOnline = document.getElementById("onlineDevices");
+  const elOffline = document.getElementById("offlineDevices");
+  const elUptime = document.getElementById("uptimePercent");
+  const elAtRisk = document.getElementById("atRiskDevices");
+
+  if (!stats) return;
+
+  if (elTotal) elTotal.textContent = stats.total;
+  if (elOnline) elOnline.textContent = stats.online;
+  if (elOffline) elOffline.textContent = stats.offline;
+  if (elUptime) elUptime.textContent = `${stats.uptime_pct}%`;
+  if (elAtRisk) {
+    elAtRisk.textContent = stats.at_risk;
+    elAtRisk.classList.toggle("text-danger", stats.at_risk > 0);
+  }
+}
+
+/* ---------------------------
+   📈 Charts: CPU/MEM + Threats
+--------------------------- */
+let sysChart, threatChart;
+
+function renderCharts(chartData) {
+  if (!chartData) return;
+  const ctxSys = document.getElementById("sysChart");
+  const ctxThreat = document.getElementById("threatChart");
+
+  const cpu = chartData.cpu || [];
+  const mem = chartData.mem || [];
+  const timestamps = chartData.timestamps || [];
+
+  const threatLabels = chartData.threatTrend.map(e => e.t);
+  const threatValues = chartData.threatTrend.map(e => e.v);
+
+  if (sysChart) sysChart.destroy();
+  if (threatChart) threatChart.destroy();
+
+  // System Load Chart
+  sysChart = new Chart(ctxSys, {
+    type: "line",
+    data: {
+      labels: timestamps,
+      datasets: [
+        {
+          label: "CPU %",
+          data: cpu,
+          borderColor: "#00C8FF",
+          fill: false,
+          tension: 0.3,
+        },
+        {
+          label: "Memory %",
+          data: mem,
+          borderColor: "#2EA043",
+          fill: false,
+          tension: 0.3,
+        },
+      ],
+    },
+    options: {
+      plugins: { legend: { labels: { color: "#E4E8EC" } } },
+      scales: {
+        x: { ticks: { color: "#9CA3AF" }, grid: { color: "#1E2630" } },
+        y: { ticks: { color: "#9CA3AF" }, grid: { color: "#1E2630" } },
+      },
+    },
+  });
+
+  // Threat Trend Chart
+  threatChart = new Chart(ctxThreat, {
+    type: "bar",
+    data: {
+      labels: threatLabels,
+      datasets: [
+        {
+          label: "Threat Events",
+          data: threatValues,
+          backgroundColor: "rgba(248,81,73,0.8)",
+          borderRadius: 6,
+        },
+      ],
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: "#9CA3AF" }, grid: { color: "#141A22" } },
+        y: { ticks: { color: "#9CA3AF" }, grid: { color: "#1E2630" } },
+      },
+    },
+  });
+}

@@ -1,0 +1,130 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Incidents · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid py-3">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h4 class="fw-semibold mb-0 text-accent">Incident Console</h4>
+      <small class="text-muted">
+        Correlated security incidents grouped from AI + Events.
+      </small>
+    </div>
+  </div>
+
+  <!-- Top stats -->
+  <div class="row mb-3">
+    <div class="col-md-3 mb-2">
+      <div class="tg-card p-3 h-100">
+        <div class="text-muted small">Total Incidents</div>
+        <div class="fs-4 fw-semibold">{{ incidents|length }}</div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-2">
+      <div class="tg-card p-3 h-100">
+        <div class="text-muted small">Open / Investigating</div>
+        <div class="fs-4 fw-semibold text-warning">{{ open_count }}</div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-2">
+      <div class="tg-card p-3 h-100">
+        <div class="text-muted small">Closed / Resolved</div>
+        <div class="fs-4 fw-semibold text-success">{{ closed_count }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Incident table -->
+  <div class="tg-card p-0 shadow-card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr class="text-accent">
+            <th style="min-width: 160px;">Created</th>
+            <th>Title</th>
+            <th>Severity</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Risk</th>
+            <th style="width: 80px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if incidents %}
+            {% for inc in incidents %}
+              {# Severity badge class #}
+              {% set sev = (inc.severity or '').lower() %}
+              {% if sev == 'critical' %}
+                {% set sev_cls = 'severity-critical' %}
+              {% elif sev == 'high' %}
+                {% set sev_cls = 'severity-high' %}
+              {% elif sev == 'medium' %}
+                {% set sev_cls = 'severity-medium' %}
+              {% elif sev == 'low' %}
+                {% set sev_cls = 'severity-low' %}
+              {% else %}
+                {% set sev_cls = 'severity-info' %}
+              {% endif %}
+
+              {# Status badge class #}
+              {% set st = (inc.status or '').lower() %}
+              {% if st in ['open', 'investigating', 'escalated'] %}
+                {% set st_cls = 'badge bg-warning-subtle text-warning-emphasis' %}
+              {% elif st in ['closed', 'resolved'] %}
+                {% set st_cls = 'badge bg-success-subtle text-success-emphasis' %}
+              {% else %}
+                {% set st_cls = 'badge bg-secondary-subtle text-secondary-emphasis' %}
+              {% endif %}
+
+              <tr>
+                <td class="text-nowrap">
+                  {{ inc.created_at.strftime("%Y-%m-%d %H:%M:%S") if inc.created_at else '—' }}
+                </td>
+                <td>
+                  <div class="fw-semibold">{{ inc.title }}</div>
+                  {% if inc.mitre_tag %}
+                    <small class="text-muted">MITRE: {{ inc.mitre_tag }}</small>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="severity-badge {{ sev_cls }}">
+                    {{ inc.severity|upper }}
+                  </span>
+                </td>
+                <td>{{ inc.category or '—' }}</td>
+                <td>
+                  <span class="{{ st_cls }}">
+                    {{ inc.status or 'unknown' }}
+                  </span>
+                </td>
+                <td>
+                  {% if inc.risk_score is not none %}
+                    {{ inc.risk_score }}/100
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <a
+                    href="{{ url_for('dashboard.incident_detail', incident_id=inc.id) }}"
+                    class="btn btn-sm btn-outline-light"
+                  >
+                    View
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-3">
+                No incidents have been correlated yet.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

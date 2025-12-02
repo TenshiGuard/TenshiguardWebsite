@@ -1,0 +1,1503 @@
+.
+├── __pycache__
+│   ├── config.cpython-312.pyc
+│   └── run.cpython-312.pyc
+├── agent_ai
+│   ├── agent_client_ai.py
+│   └── config_ai.json
+├── agent_client.py
+├── app
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   └── extensions.cpython-312.pyc
+│   ├── ai
+│   │   ├── __init__.py
+│   │   ├── rules
+│   │   │   ├── __init__.py
+│   │   │   ├── malware_signatures.json
+│   │   │   ├── network_rules.json
+│   │   │   └── process_rules.json
+│   │   ├── services
+│   │   │   ├── __init__.py
+│   │   │   ├── ai_engine.py
+│   │   │   └── alert_router.py
+│   │   └── utils
+│   │       └── __init__.py
+│   ├── config
+│   │   ├── __init__.py
+│   │   └── plans.py
+│   ├── config.py
+│   ├── extensions.py
+│   ├── forms.py
+│   ├── instance
+│   ├── logo
+│   │   └── WhatsApp Image 2025-09-16 at 10.14.59 PM-Photoroom.png
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── ai_anomaly.cpython-312.pyc
+│   │   │   ├── ai_event.cpython-312.pyc
+│   │   │   ├── ai_file.cpython-312.pyc
+│   │   │   ├── ai_models.cpython-312.pyc
+│   │   │   ├── ai_network.cpython-312.pyc
+│   │   │   ├── ai_process.cpython-312.pyc
+│   │   │   ├── alert.cpython-312.pyc
+│   │   │   ├── device.cpython-312.pyc
+│   │   │   ├── event.cpython-312.pyc
+│   │   │   ├── organization.cpython-312.pyc
+│   │   │   ├── subscription.cpython-312.pyc
+│   │   │   ├── telemetry.cpython-312.pyc
+│   │   │   └── user.cpython-312.pyc
+│   │   ├── ai_anomaly.py
+│   │   ├── ai_event.py
+│   │   ├── ai_file.py
+│   │   ├── ai_network.py
+│   │   ├── ai_process.py
+│   │   ├── alert.py
+│   │   ├── device.py
+│   │   ├── event.py
+│   │   ├── organization.py
+│   │   ├── subscription.py
+│   │   ├── telemetry.py
+│   │   └── user.py
+│   ├── models.py
+│   ├── routes
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── agent_installer.cpython-312.pyc
+│   │   │   ├── alerts.cpython-312.pyc
+│   │   │   ├── api.cpython-312.pyc
+│   │   │   ├── api_dashboard.cpython-312.pyc
+│   │   │   ├── api_events.cpython-312.pyc
+│   │   │   ├── api_sos.cpython-312.pyc
+│   │   │   ├── auth.cpython-312.pyc
+│   │   │   ├── dashboard.cpython-312.pyc
+│   │   │   ├── install.cpython-312.pyc
+│   │   │   ├── register_flow.cpython-312.pyc
+│   │   │   └── sector.cpython-312.pyc
+│   │   ├── agent_installer.py
+│   │   ├── alerts.py
+│   │   ├── api.py
+│   │   ├── api_ai.py
+│   │   ├── api_dashboard.py
+│   │   ├── api_events.py
+│   │   ├── api_sos.py
+│   │   ├── auth.py
+│   │   ├── dashboard.py
+│   │   ├── register_flow.py
+│   │   └── sector.py
+│   ├── routes.py
+│   ├── scripts
+│   │   └── reset_all_to_bcrypt.py
+│   ├── security
+│   │   ├── __pycache__
+│   │   │   └── permissions.cpython-312.pyc
+│   │   └── permissions.py
+│   ├── services
+│   │   ├── __pycache__
+│   │   │   └── alerting_service.cpython-312.pyc
+│   │   ├── alerting_service.py
+│   │   ├── alerts.py
+│   │   ├── mock_data.py
+│   │   ├── notifier.py
+│   │   └── offline_sweeper.py
+│   ├── static
+│   │   ├── agent
+│   │   │   └── agent_client.py
+│   │   ├── css
+│   │   │   ├── dashboard.css
+│   │   │   ├── dashboard_live.css
+│   │   │   ├── dashboard_premium.css
+│   │   │   ├── premium.css
+│   │   │   ├── style.css
+│   │   │   └── theme.css
+│   │   ├── images
+│   │   │   ├── logo.png
+│   │   │   └── tenshiguard_logo.png
+│   │   └── js
+│   │       ├── admin_dashboard.js
+│   │       ├── ai
+│   │       │   ├── ai_anomalies.js
+│   │       │   ├── ai_dashboard.js
+│   │       │   ├── ai_files.js
+│   │       │   ├── ai_insights.js
+│   │       │   ├── ai_network.js
+│   │       │   ├── ai_processes.js
+│   │       │   └── ai_threats.js
+│   │       ├── charts
+│   │       │   ├── device_status.js
+│   │       │   └── system_metrics.js
+│   │       ├── dashboard.js
+│   │       ├── dashboard_events.js
+│   │       ├── dashboard_history.js
+│   │       ├── dashboard_live.js
+│   │       ├── dashboard_overview.js
+│   │       ├── onboarding.js
+│   │       ├── sos_alerts.js
+│   │       ├── theme.js
+│   │       └── threat_trend.js
+│   ├── templates
+│   │   ├── agent
+│   │   │   ├── agent_linux_client.py.j2
+│   │   │   ├── agent_macos_client.py.j2
+│   │   │   └── agent_windows_client.py.j2
+│   │   ├── auth
+│   │   │   ├── forgot_password.html
+│   │   │   ├── login.html
+│   │   │   ├── mfa_verify.html
+│   │   │   ├── register_org.html
+│   │   │   ├── reset_password.html
+│   │   │   └── success.html
+│   │   ├── base.html
+│   │   ├── dashboard
+│   │   │   ├── _sector_cards.html
+│   │   │   ├── add_user.html
+│   │   │   ├── ai
+│   │   │   │   ├── ai_anomalies.html
+│   │   │   │   ├── ai_dashboard.html
+│   │   │   │   ├── ai_files.html
+│   │   │   │   ├── ai_insights.html
+│   │   │   │   ├── ai_network.html
+│   │   │   │   ├── ai_processes.html
+│   │   │   │   ├── ai_settings.html
+│   │   │   │   └── ai_threats.html
+│   │   │   ├── alerts.html
+│   │   │   ├── at_risk.html
+│   │   │   ├── base_dashboard.html
+│   │   │   ├── dashboard_admin.html
+│   │   │   ├── dashboard_user.html
+│   │   │   ├── devices.html
+│   │   │   ├── index.html
+│   │   │   ├── live_events.html
+│   │   │   ├── manage_users.html
+│   │   │   ├── mfa_confirm.html
+│   │   │   ├── profile.html
+│   │   │   ├── setup_agent.html
+│   │   │   ├── sos_preferences.html
+│   │   │   └── subscription.html
+│   │   ├── install
+│   │   │   ├── base_install.html
+│   │   │   ├── index.html
+│   │   │   ├── install_android.html
+│   │   │   ├── install_cloud.html
+│   │   │   ├── install_firewall.html
+│   │   │   ├── install_linux.html
+│   │   │   ├── install_linux.sh.j2
+│   │   │   ├── install_mac.html
+│   │   │   ├── install_mac.sh.j2
+│   │   │   ├── install_windows.html
+│   │   │   ├── install_windows.ps1.j2
+│   │   │   ├── invalid_token.html
+│   │   │   ├── uninstall.ps1.j2
+│   │   │   └── uninstall.sh.j2
+│   │   ├── login.html
+│   │   ├── onboarding
+│   │   │   └── payment.html
+│   │   ├── partials
+│   │   │   └── modals.html
+│   │   ├── register.html
+│   │   └── sectors
+│   │       ├── _sector_cards.html
+│   │       ├── academic_dashboard.html
+│   │       ├── healthcare_dashboard.html
+│   │       └── hospitality_dashboard.html
+│   └── utils
+│       ├── __pycache__
+│       │   ├── compliance_breakdown.cpython-312.pyc
+│       │   ├── compliance_score.cpython-312.pyc
+│       │   ├── heartbeat.cpython-312.pyc
+│       │   ├── log_watcher.cpython-312.pyc
+│       │   ├── mitigation.cpython-312.pyc
+│       │   ├── notify.cpython-312.pyc
+│       │   ├── sector_compliance.cpython-312.pyc
+│       │   ├── sector_data.cpython-312.pyc
+│       │   ├── sector_features.cpython-312.pyc
+│       │   └── telemetry_cleanup.cpython-312.pyc
+│       ├── compliance_breakdown.py
+│       ├── compliance_score.py
+│       ├── decorators.py
+│       ├── entitlements.py
+│       ├── heartbeat.py
+│       ├── log_watcher.py
+│       ├── mitigation.py
+│       ├── notify.py
+│       ├── sector_compliance.py
+│       ├── sector_data.py
+│       ├── sector_features.py
+│       └── telemetry_cleanup.py
+├── config.py
+├── create_security_events.py
+├── create_seed_data.py
+├── dev_tools.py
+├── instance
+│   ├── tenshiguard.db
+│   ├── tenshiguard_ai_rebuild_2025-11-20_21-23-46.db
+│   └── tenshiguard_backup_preclean.db
+├── logs
+│   └── tenshiguard.log
+├── migrations
+│   ├── README
+│   ├── __pycache__
+│   │   └── env.cpython-312.pyc
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── 60c6ecf691f8_baseline_schema_2025.py
+│       ├── __pycache__
+│       │   ├── 60c6ecf691f8_baseline_schema_2025.cpython-312.pyc
+│       │   └── e6ffdb71e4cc_add_ai_models_clean.cpython-312.pyc
+│       └── e6ffdb71e4cc_add_ai_models_clean.py
+├── migrations_backup_2025_11_20
+│   ├── README
+│   ├── __pycache__
+│   │   └── env.cpython-312.pyc
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── __pycache__
+│       │   └── a98d6e6c6421_initial_base.cpython-312.pyc
+│       └── a98d6e6c6421_initial_base.py
+├── nul
+├── project_tree.txt
+├── requirements.lock
+├── requirements.txt
+├── run.py
+├── scripts
+│   ├── create_ai_seed_data.py
+│   └── train_local_model.py
+└── venv
+    ├── bin
+    │   ├── Activate.ps1
+    │   ├── activate
+    │   ├── activate.csh
+    │   ├── activate.fish
+    │   ├── aiosmtpd
+    │   ├── alembic
+    │   ├── dotenv
+    │   ├── email_validator
+    │   ├── flask
+    │   ├── mako-render
+    │   ├── normalizer
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.12
+    │   ├── python -> python3
+    │   ├── python3 -> /usr/bin/python3
+    │   ├── python3.12 -> python3
+    │   └── wheel
+    ├── include
+    │   ├── python3.12
+    │   └── site
+    │       └── python3.12
+    │           └── greenlet
+    │               └── greenlet.h
+    ├── lib
+    │   └── python3.12
+    │       └── site-packages
+    │           ├── Flask_Bcrypt-1.0.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   └── top_level.txt
+    │           ├── Flask_Login-0.6.3.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   └── top_level.txt
+    │           ├── Flask_Migrate-4.1.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   └── top_level.txt
+    │           ├── PIL
+    │           │   ├── AvifImagePlugin.py
+    │           │   ├── BdfFontFile.py
+    │           │   ├── BlpImagePlugin.py
+    │           │   ├── BmpImagePlugin.py
+    │           │   ├── BufrStubImagePlugin.py
+    │           │   ├── ContainerIO.py
+    │           │   ├── CurImagePlugin.py
+    │           │   ├── DcxImagePlugin.py
+    │           │   ├── DdsImagePlugin.py
+    │           │   ├── EpsImagePlugin.py
+    │           │   ├── ExifTags.py
+    │           │   ├── FitsImagePlugin.py
+    │           │   ├── FliImagePlugin.py
+    │           │   ├── FontFile.py
+    │           │   ├── FpxImagePlugin.py
+    │           │   ├── FtexImagePlugin.py
+    │           │   ├── GbrImagePlugin.py
+    │           │   ├── GdImageFile.py
+    │           │   ├── GifImagePlugin.py
+    │           │   ├── GimpGradientFile.py
+    │           │   ├── GimpPaletteFile.py
+    │           │   ├── GribStubImagePlugin.py
+    │           │   ├── Hdf5StubImagePlugin.py
+    │           │   ├── IcnsImagePlugin.py
+    │           │   ├── IcoImagePlugin.py
+    │           │   ├── ImImagePlugin.py
+    │           │   ├── Image.py
+    │           │   ├── ImageChops.py
+    │           │   ├── ImageCms.py
+    │           │   ├── ImageColor.py
+    │           │   ├── ImageDraw.py
+    │           │   ├── ImageDraw2.py
+    │           │   ├── ImageEnhance.py
+    │           │   ├── ImageFile.py
+    │           │   ├── ImageFilter.py
+    │           │   ├── ImageFont.py
+    │           │   ├── ImageGrab.py
+    │           │   ├── ImageMath.py
+    │           │   ├── ImageMode.py
+    │           │   ├── ImageMorph.py
+    │           │   ├── ImageOps.py
+    │           │   ├── ImagePalette.py
+    │           │   ├── ImagePath.py
+    │           │   ├── ImageQt.py
+    │           │   ├── ImageSequence.py
+    │           │   ├── ImageShow.py
+    │           │   ├── ImageStat.py
+    │           │   ├── ImageText.py
+    │           │   ├── ImageTk.py
+    │           │   ├── ImageTransform.py
+    │           │   ├── ImageWin.py
+    │           │   ├── ImtImagePlugin.py
+    │           │   ├── IptcImagePlugin.py
+    │           │   ├── Jpeg2KImagePlugin.py
+    │           │   ├── JpegImagePlugin.py
+    │           │   ├── JpegPresets.py
+    │           │   ├── McIdasImagePlugin.py
+    │           │   ├── MicImagePlugin.py
+    │           │   ├── MpegImagePlugin.py
+    │           │   ├── MpoImagePlugin.py
+    │           │   ├── MspImagePlugin.py
+    │           │   ├── PSDraw.py
+    │           │   ├── PaletteFile.py
+    │           │   ├── PalmImagePlugin.py
+    │           │   ├── PcdImagePlugin.py
+    │           │   ├── PcfFontFile.py
+    │           │   ├── PcxImagePlugin.py
+    │           │   ├── PdfImagePlugin.py
+    │           │   ├── PdfParser.py
+    │           │   ├── PixarImagePlugin.py
+    │           │   ├── PngImagePlugin.py
+    │           │   ├── PpmImagePlugin.py
+    │           │   ├── PsdImagePlugin.py
+    │           │   ├── QoiImagePlugin.py
+    │           │   ├── SgiImagePlugin.py
+    │           │   ├── SpiderImagePlugin.py
+    │           │   ├── SunImagePlugin.py
+    │           │   ├── TarIO.py
+    │           │   ├── TgaImagePlugin.py
+    │           │   ├── TiffImagePlugin.py
+    │           │   ├── TiffTags.py
+    │           │   ├── WalImageFile.py
+    │           │   ├── WebPImagePlugin.py
+    │           │   ├── WmfImagePlugin.py
+    │           │   ├── XVThumbImagePlugin.py
+    │           │   ├── XbmImagePlugin.py
+    │           │   ├── XpmImagePlugin.py
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── _avif.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _avif.pyi
+    │           │   ├── _binary.py
+    │           │   ├── _deprecate.py
+    │           │   ├── _imaging.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _imaging.pyi
+    │           │   ├── _imagingcms.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _imagingcms.pyi
+    │           │   ├── _imagingft.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _imagingft.pyi
+    │           │   ├── _imagingmath.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _imagingmath.pyi
+    │           │   ├── _imagingmorph.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _imagingmorph.pyi
+    │           │   ├── _imagingtk.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _imagingtk.pyi
+    │           │   ├── _tkinter_finder.py
+    │           │   ├── _typing.py
+    │           │   ├── _util.py
+    │           │   ├── _version.py
+    │           │   ├── _webp.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _webp.pyi
+    │           │   ├── features.py
+    │           │   ├── py.typed
+    │           │   └── report.py
+    │           ├── PyJWT-2.10.1.dist-info
+    │           │   ├── AUTHORS.rst
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── top_level.txt
+    │           ├── __pycache__
+    │           │   ├── flask_bcrypt.cpython-312.pyc
+    │           │   └── typing_extensions.cpython-312.pyc
+    │           ├── _distutils_hack
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   └── override.py
+    │           ├── aiohappyeyeballs
+    │           │   ├── __init__.py
+    │           │   ├── _staggered.py
+    │           │   ├── impl.py
+    │           │   ├── py.typed
+    │           │   ├── types.py
+    │           │   └── utils.py
+    │           ├── aiohappyeyeballs-2.6.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   └── WHEEL
+    │           ├── aiohttp
+    │           │   ├── __init__.py
+    │           │   ├── _cookie_helpers.py
+    │           │   ├── _cparser.pxd
+    │           │   ├── _find_header.pxd
+    │           │   ├── _headers.pxi
+    │           │   ├── _http_parser.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _http_parser.pyx
+    │           │   ├── _http_writer.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _http_writer.pyx
+    │           │   ├── _websocket
+    │           │   ├── abc.py
+    │           │   ├── base_protocol.py
+    │           │   ├── client.py
+    │           │   ├── client_exceptions.py
+    │           │   ├── client_middleware_digest_auth.py
+    │           │   ├── client_middlewares.py
+    │           │   ├── client_proto.py
+    │           │   ├── client_reqrep.py
+    │           │   ├── client_ws.py
+    │           │   ├── compression_utils.py
+    │           │   ├── connector.py
+    │           │   ├── cookiejar.py
+    │           │   ├── formdata.py
+    │           │   ├── hdrs.py
+    │           │   ├── helpers.py
+    │           │   ├── http.py
+    │           │   ├── http_exceptions.py
+    │           │   ├── http_parser.py
+    │           │   ├── http_websocket.py
+    │           │   ├── http_writer.py
+    │           │   ├── log.py
+    │           │   ├── multipart.py
+    │           │   ├── payload.py
+    │           │   ├── payload_streamer.py
+    │           │   ├── py.typed
+    │           │   ├── pytest_plugin.py
+    │           │   ├── resolver.py
+    │           │   ├── streams.py
+    │           │   ├── tcp_helpers.py
+    │           │   ├── test_utils.py
+    │           │   ├── tracing.py
+    │           │   ├── typedefs.py
+    │           │   ├── web.py
+    │           │   ├── web_app.py
+    │           │   ├── web_exceptions.py
+    │           │   ├── web_fileresponse.py
+    │           │   ├── web_log.py
+    │           │   ├── web_middlewares.py
+    │           │   ├── web_protocol.py
+    │           │   ├── web_request.py
+    │           │   ├── web_response.py
+    │           │   ├── web_routedef.py
+    │           │   ├── web_runner.py
+    │           │   ├── web_server.py
+    │           │   ├── web_urldispatcher.py
+    │           │   ├── web_ws.py
+    │           │   └── worker.py
+    │           ├── aiohttp-3.13.2.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── aiohttp_retry
+    │           │   ├── __init__.py
+    │           │   ├── client.py
+    │           │   ├── py.typed
+    │           │   ├── retry_options.py
+    │           │   └── types.py
+    │           ├── aiohttp_retry-2.9.1.dist-info
+    │           │   ├── AUTHORS
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── top_level.txt
+    │           ├── aiosignal
+    │           │   ├── __init__.py
+    │           │   └── py.typed
+    │           ├── aiosignal-1.4.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── aiosmtpd
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── controller.py
+    │           │   ├── docs
+    │           │   ├── handlers.py
+    │           │   ├── lmtp.py
+    │           │   ├── main.py
+    │           │   ├── proxy_protocol.py
+    │           │   ├── py.typed
+    │           │   ├── qa
+    │           │   ├── smtp.py
+    │           │   ├── testing
+    │           │   └── tests
+    │           ├── aiosmtpd-1.4.6.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE
+    │           │   ├── METADATA
+    │           │   ├── NOTICE
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   └── top_level.txt
+    │           ├── alembic
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── __pycache__
+    │           │   ├── autogenerate
+    │           │   ├── command.py
+    │           │   ├── config.py
+    │           │   ├── context.py
+    │           │   ├── context.pyi
+    │           │   ├── ddl
+    │           │   ├── environment.py
+    │           │   ├── migration.py
+    │           │   ├── op.py
+    │           │   ├── op.pyi
+    │           │   ├── operations
+    │           │   ├── py.typed
+    │           │   ├── runtime
+    │           │   ├── script
+    │           │   ├── templates
+    │           │   ├── testing
+    │           │   └── util
+    │           ├── alembic-1.16.5.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── atpublic-6.0.2.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── attr
+    │           │   ├── __init__.py
+    │           │   ├── __init__.pyi
+    │           │   ├── __pycache__
+    │           │   ├── _cmp.py
+    │           │   ├── _cmp.pyi
+    │           │   ├── _compat.py
+    │           │   ├── _config.py
+    │           │   ├── _funcs.py
+    │           │   ├── _make.py
+    │           │   ├── _next_gen.py
+    │           │   ├── _typing_compat.pyi
+    │           │   ├── _version_info.py
+    │           │   ├── _version_info.pyi
+    │           │   ├── converters.py
+    │           │   ├── converters.pyi
+    │           │   ├── exceptions.py
+    │           │   ├── exceptions.pyi
+    │           │   ├── filters.py
+    │           │   ├── filters.pyi
+    │           │   ├── py.typed
+    │           │   ├── setters.py
+    │           │   ├── setters.pyi
+    │           │   ├── validators.py
+    │           │   └── validators.pyi
+    │           ├── attrs
+    │           │   ├── __init__.py
+    │           │   ├── __init__.pyi
+    │           │   ├── converters.py
+    │           │   ├── exceptions.py
+    │           │   ├── filters.py
+    │           │   ├── py.typed
+    │           │   ├── setters.py
+    │           │   └── validators.py
+    │           ├── attrs-25.4.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── bcrypt
+    │           │   ├── __init__.py
+    │           │   ├── __init__.pyi
+    │           │   ├── __pycache__
+    │           │   ├── _bcrypt.abi3.so
+    │           │   └── py.typed
+    │           ├── bcrypt-5.0.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── blinker
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _utilities.py
+    │           │   ├── base.py
+    │           │   └── py.typed
+    │           ├── blinker-1.9.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE.txt
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   └── WHEEL
+    │           ├── certifi
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── __pycache__
+    │           │   ├── cacert.pem
+    │           │   ├── core.py
+    │           │   └── py.typed
+    │           ├── certifi-2025.10.5.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── charset_normalizer
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── __pycache__
+    │           │   ├── api.py
+    │           │   ├── cd.py
+    │           │   ├── cli
+    │           │   ├── constant.py
+    │           │   ├── legacy.py
+    │           │   ├── md.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── md.py
+    │           │   ├── md__mypyc.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── models.py
+    │           │   ├── py.typed
+    │           │   ├── utils.py
+    │           │   └── version.py
+    │           ├── charset_normalizer-3.4.4.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── click
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _compat.py
+    │           │   ├── _termui_impl.py
+    │           │   ├── _textwrap.py
+    │           │   ├── _utils.py
+    │           │   ├── _winconsole.py
+    │           │   ├── core.py
+    │           │   ├── decorators.py
+    │           │   ├── exceptions.py
+    │           │   ├── formatting.py
+    │           │   ├── globals.py
+    │           │   ├── parser.py
+    │           │   ├── py.typed
+    │           │   ├── shell_completion.py
+    │           │   ├── termui.py
+    │           │   ├── testing.py
+    │           │   ├── types.py
+    │           │   └── utils.py
+    │           ├── click-8.3.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── distutils-precedence.pth
+    │           ├── dns
+    │           │   ├── __init__.py
+    │           │   ├── _asyncbackend.py
+    │           │   ├── _asyncio_backend.py
+    │           │   ├── _ddr.py
+    │           │   ├── _features.py
+    │           │   ├── _immutable_ctx.py
+    │           │   ├── _no_ssl.py
+    │           │   ├── _tls_util.py
+    │           │   ├── _trio_backend.py
+    │           │   ├── asyncbackend.py
+    │           │   ├── asyncquery.py
+    │           │   ├── asyncresolver.py
+    │           │   ├── btree.py
+    │           │   ├── btreezone.py
+    │           │   ├── dnssec.py
+    │           │   ├── dnssecalgs
+    │           │   ├── dnssectypes.py
+    │           │   ├── e164.py
+    │           │   ├── edns.py
+    │           │   ├── entropy.py
+    │           │   ├── enum.py
+    │           │   ├── exception.py
+    │           │   ├── flags.py
+    │           │   ├── grange.py
+    │           │   ├── immutable.py
+    │           │   ├── inet.py
+    │           │   ├── ipv4.py
+    │           │   ├── ipv6.py
+    │           │   ├── message.py
+    │           │   ├── name.py
+    │           │   ├── namedict.py
+    │           │   ├── nameserver.py
+    │           │   ├── node.py
+    │           │   ├── opcode.py
+    │           │   ├── py.typed
+    │           │   ├── query.py
+    │           │   ├── quic
+    │           │   ├── rcode.py
+    │           │   ├── rdata.py
+    │           │   ├── rdataclass.py
+    │           │   ├── rdataset.py
+    │           │   ├── rdatatype.py
+    │           │   ├── rdtypes
+    │           │   ├── renderer.py
+    │           │   ├── resolver.py
+    │           │   ├── reversename.py
+    │           │   ├── rrset.py
+    │           │   ├── serial.py
+    │           │   ├── set.py
+    │           │   ├── tokenizer.py
+    │           │   ├── transaction.py
+    │           │   ├── tsig.py
+    │           │   ├── tsigkeyring.py
+    │           │   ├── ttl.py
+    │           │   ├── update.py
+    │           │   ├── version.py
+    │           │   ├── versioned.py
+    │           │   ├── win32util.py
+    │           │   ├── wire.py
+    │           │   ├── xfr.py
+    │           │   ├── zone.py
+    │           │   ├── zonefile.py
+    │           │   └── zonetypes.py
+    │           ├── dnspython-2.8.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── dotenv
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── __pycache__
+    │           │   ├── cli.py
+    │           │   ├── ipython.py
+    │           │   ├── main.py
+    │           │   ├── parser.py
+    │           │   ├── py.typed
+    │           │   ├── variables.py
+    │           │   └── version.py
+    │           ├── email_validator
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── deliverability.py
+    │           │   ├── exceptions.py
+    │           │   ├── py.typed
+    │           │   ├── rfc_constants.py
+    │           │   ├── syntax.py
+    │           │   ├── types.py
+    │           │   ├── validate_email.py
+    │           │   └── version.py
+    │           ├── email_validator-2.3.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── flask
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── __pycache__
+    │           │   ├── app.py
+    │           │   ├── blueprints.py
+    │           │   ├── cli.py
+    │           │   ├── config.py
+    │           │   ├── ctx.py
+    │           │   ├── debughelpers.py
+    │           │   ├── globals.py
+    │           │   ├── helpers.py
+    │           │   ├── json
+    │           │   ├── logging.py
+    │           │   ├── py.typed
+    │           │   ├── sansio
+    │           │   ├── sessions.py
+    │           │   ├── signals.py
+    │           │   ├── templating.py
+    │           │   ├── testing.py
+    │           │   ├── typing.py
+    │           │   ├── views.py
+    │           │   └── wrappers.py
+    │           ├── flask-3.1.2.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   └── licenses
+    │           ├── flask_bcrypt.py
+    │           ├── flask_cors
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── core.py
+    │           │   ├── decorator.py
+    │           │   ├── extension.py
+    │           │   └── version.py
+    │           ├── flask_cors-6.0.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   └── top_level.txt
+    │           ├── flask_login
+    │           │   ├── __about__.py
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── config.py
+    │           │   ├── login_manager.py
+    │           │   ├── mixins.py
+    │           │   ├── signals.py
+    │           │   ├── test_client.py
+    │           │   └── utils.py
+    │           ├── flask_mail
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   └── py.typed
+    │           ├── flask_mail-0.10.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE.txt
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   └── WHEEL
+    │           ├── flask_migrate
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── cli.py
+    │           │   └── templates
+    │           ├── flask_sqlalchemy
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── cli.py
+    │           │   ├── extension.py
+    │           │   ├── model.py
+    │           │   ├── pagination.py
+    │           │   ├── py.typed
+    │           │   ├── query.py
+    │           │   ├── record_queries.py
+    │           │   ├── session.py
+    │           │   ├── table.py
+    │           │   └── track_modifications.py
+    │           ├── flask_sqlalchemy-3.1.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE.rst
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   └── WHEEL
+    │           ├── flask_wtf
+    │           │   ├── __init__.py
+    │           │   ├── _compat.py
+    │           │   ├── csrf.py
+    │           │   ├── file.py
+    │           │   ├── form.py
+    │           │   ├── i18n.py
+    │           │   └── recaptcha
+    │           ├── flask_wtf-1.2.2.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── frozenlist
+    │           │   ├── __init__.py
+    │           │   ├── __init__.pyi
+    │           │   ├── _frozenlist.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _frozenlist.pyx
+    │           │   └── py.typed
+    │           ├── frozenlist-1.8.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── greenlet
+    │           │   ├── CObjects.cpp
+    │           │   ├── PyGreenlet.cpp
+    │           │   ├── PyGreenlet.hpp
+    │           │   ├── PyGreenletUnswitchable.cpp
+    │           │   ├── PyModule.cpp
+    │           │   ├── TBrokenGreenlet.cpp
+    │           │   ├── TExceptionState.cpp
+    │           │   ├── TGreenlet.cpp
+    │           │   ├── TGreenlet.hpp
+    │           │   ├── TGreenletGlobals.cpp
+    │           │   ├── TMainGreenlet.cpp
+    │           │   ├── TPythonState.cpp
+    │           │   ├── TStackState.cpp
+    │           │   ├── TThreadState.hpp
+    │           │   ├── TThreadStateCreator.hpp
+    │           │   ├── TThreadStateDestroy.cpp
+    │           │   ├── TUserGreenlet.cpp
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _greenlet.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── greenlet.cpp
+    │           │   ├── greenlet.h
+    │           │   ├── greenlet_allocator.hpp
+    │           │   ├── greenlet_compiler_compat.hpp
+    │           │   ├── greenlet_cpython_compat.hpp
+    │           │   ├── greenlet_exceptions.hpp
+    │           │   ├── greenlet_internal.hpp
+    │           │   ├── greenlet_msvc_compat.hpp
+    │           │   ├── greenlet_refs.hpp
+    │           │   ├── greenlet_slp_switch.hpp
+    │           │   ├── greenlet_thread_support.hpp
+    │           │   ├── platform
+    │           │   ├── slp_platformselect.h
+    │           │   └── tests
+    │           ├── greenlet-3.2.4.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── idna
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── codec.py
+    │           │   ├── compat.py
+    │           │   ├── core.py
+    │           │   ├── idnadata.py
+    │           │   ├── intranges.py
+    │           │   ├── package_data.py
+    │           │   ├── py.typed
+    │           │   └── uts46data.py
+    │           ├── idna-3.10.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE.md
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   └── WHEEL
+    │           ├── itsdangerous
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _json.py
+    │           │   ├── encoding.py
+    │           │   ├── exc.py
+    │           │   ├── py.typed
+    │           │   ├── serializer.py
+    │           │   ├── signer.py
+    │           │   ├── timed.py
+    │           │   └── url_safe.py
+    │           ├── itsdangerous-2.2.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE.txt
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   └── WHEEL
+    │           ├── jinja2
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _identifier.py
+    │           │   ├── async_utils.py
+    │           │   ├── bccache.py
+    │           │   ├── compiler.py
+    │           │   ├── constants.py
+    │           │   ├── debug.py
+    │           │   ├── defaults.py
+    │           │   ├── environment.py
+    │           │   ├── exceptions.py
+    │           │   ├── ext.py
+    │           │   ├── filters.py
+    │           │   ├── idtracking.py
+    │           │   ├── lexer.py
+    │           │   ├── loaders.py
+    │           │   ├── meta.py
+    │           │   ├── nativetypes.py
+    │           │   ├── nodes.py
+    │           │   ├── optimizer.py
+    │           │   ├── parser.py
+    │           │   ├── py.typed
+    │           │   ├── runtime.py
+    │           │   ├── sandbox.py
+    │           │   ├── tests.py
+    │           │   ├── utils.py
+    │           │   └── visitor.py
+    │           ├── jinja2-3.1.6.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   └── licenses
+    │           ├── jwt
+    │           │   ├── __init__.py
+    │           │   ├── algorithms.py
+    │           │   ├── api_jwk.py
+    │           │   ├── api_jws.py
+    │           │   ├── api_jwt.py
+    │           │   ├── exceptions.py
+    │           │   ├── help.py
+    │           │   ├── jwk_set_cache.py
+    │           │   ├── jwks_client.py
+    │           │   ├── py.typed
+    │           │   ├── types.py
+    │           │   ├── utils.py
+    │           │   └── warnings.py
+    │           ├── mako
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _ast_util.py
+    │           │   ├── ast.py
+    │           │   ├── cache.py
+    │           │   ├── cmd.py
+    │           │   ├── codegen.py
+    │           │   ├── compat.py
+    │           │   ├── exceptions.py
+    │           │   ├── ext
+    │           │   ├── filters.py
+    │           │   ├── lexer.py
+    │           │   ├── lookup.py
+    │           │   ├── parsetree.py
+    │           │   ├── pygen.py
+    │           │   ├── pyparser.py
+    │           │   ├── runtime.py
+    │           │   ├── template.py
+    │           │   ├── testing
+    │           │   └── util.py
+    │           ├── mako-1.3.10.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── markupsafe
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _native.py
+    │           │   ├── _speedups.c
+    │           │   ├── _speedups.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _speedups.pyi
+    │           │   └── py.typed
+    │           ├── markupsafe-3.0.3.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── multidict
+    │           │   ├── __init__.py
+    │           │   ├── _abc.py
+    │           │   ├── _compat.py
+    │           │   ├── _multidict.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _multidict_py.py
+    │           │   └── py.typed
+    │           ├── multidict-6.7.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── pillow-12.0.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   ├── top_level.txt
+    │           │   └── zip-safe
+    │           ├── pillow.libs
+    │           │   ├── libXau-154567c4.so.6.0.0
+    │           │   ├── libavif-01e67780.so.16.3.0
+    │           │   ├── libbrotlicommon-c55a5f7a.so.1.1.0
+    │           │   ├── libbrotlidec-2ced2f3a.so.1.1.0
+    │           │   ├── libfreetype-5bb46249.so.6.20.4
+    │           │   ├── libharfbuzz-525aa570.so.0.61210.0
+    │           │   ├── libjpeg-a41b0190.so.62.4.0
+    │           │   ├── liblcms2-cc10e42f.so.2.0.17
+    │           │   ├── liblzma-64b7ab39.so.5.8.1
+    │           │   ├── libopenjp2-94e588ba.so.2.5.4
+    │           │   ├── libpng16-00127801.so.16.50.0
+    │           │   ├── libsharpyuv-95d8a097.so.0.1.2
+    │           │   ├── libtiff-295fd75c.so.6.2.0
+    │           │   ├── libwebp-d8b9687f.so.7.2.0
+    │           │   ├── libwebpdemux-747f2b49.so.2.0.17
+    │           │   ├── libwebpmux-7f11e5ce.so.3.1.2
+    │           │   ├── libxcb-64009ff3.so.1.1.0
+    │           │   └── libzstd-761a17b6.so.1.5.7
+    │           ├── pip
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── __pip-runner__.py
+    │           │   ├── _internal
+    │           │   ├── _vendor
+    │           │   └── py.typed
+    │           ├── pip-25.2.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── pkg_resources
+    │           │   ├── __init__.py
+    │           │   ├── api_tests.txt
+    │           │   ├── py.typed
+    │           │   └── tests
+    │           ├── propcache
+    │           │   ├── __init__.py
+    │           │   ├── _helpers.py
+    │           │   ├── _helpers_c.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _helpers_c.pyx
+    │           │   ├── _helpers_py.py
+    │           │   ├── api.py
+    │           │   └── py.typed
+    │           ├── propcache-0.4.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── public
+    │           │   ├── __init__.py
+    │           │   ├── modules.py
+    │           │   ├── private.py
+    │           │   ├── public.py
+    │           │   ├── py.typed
+    │           │   └── types.py
+    │           ├── python_dotenv-1.2.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── reportlab
+    │           │   ├── __init__.py
+    │           │   ├── fonts
+    │           │   ├── graphics
+    │           │   ├── lib
+    │           │   ├── pdfbase
+    │           │   ├── pdfgen
+    │           │   ├── platypus
+    │           │   ├── rl_config.py
+    │           │   └── rl_settings.py
+    │           ├── reportlab-4.4.4.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── requests
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── __version__.py
+    │           │   ├── _internal_utils.py
+    │           │   ├── adapters.py
+    │           │   ├── api.py
+    │           │   ├── auth.py
+    │           │   ├── certs.py
+    │           │   ├── compat.py
+    │           │   ├── cookies.py
+    │           │   ├── exceptions.py
+    │           │   ├── help.py
+    │           │   ├── hooks.py
+    │           │   ├── models.py
+    │           │   ├── packages.py
+    │           │   ├── sessions.py
+    │           │   ├── status_codes.py
+    │           │   ├── structures.py
+    │           │   └── utils.py
+    │           ├── requests-2.32.5.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── setuptools
+    │           │   ├── __init__.py
+    │           │   ├── _core_metadata.py
+    │           │   ├── _discovery.py
+    │           │   ├── _distutils
+    │           │   ├── _entry_points.py
+    │           │   ├── _imp.py
+    │           │   ├── _importlib.py
+    │           │   ├── _itertools.py
+    │           │   ├── _normalization.py
+    │           │   ├── _path.py
+    │           │   ├── _reqs.py
+    │           │   ├── _scripts.py
+    │           │   ├── _shutil.py
+    │           │   ├── _static.py
+    │           │   ├── _vendor
+    │           │   ├── archive_util.py
+    │           │   ├── build_meta.py
+    │           │   ├── cli-32.exe
+    │           │   ├── cli-64.exe
+    │           │   ├── cli-arm64.exe
+    │           │   ├── cli.exe
+    │           │   ├── command
+    │           │   ├── compat
+    │           │   ├── config
+    │           │   ├── depends.py
+    │           │   ├── discovery.py
+    │           │   ├── dist.py
+    │           │   ├── errors.py
+    │           │   ├── extension.py
+    │           │   ├── glob.py
+    │           │   ├── gui-32.exe
+    │           │   ├── gui-64.exe
+    │           │   ├── gui-arm64.exe
+    │           │   ├── gui.exe
+    │           │   ├── installer.py
+    │           │   ├── launch.py
+    │           │   ├── logging.py
+    │           │   ├── modified.py
+    │           │   ├── monkey.py
+    │           │   ├── msvc.py
+    │           │   ├── namespaces.py
+    │           │   ├── script (dev).tmpl
+    │           │   ├── script.tmpl
+    │           │   ├── tests
+    │           │   ├── unicode_utils.py
+    │           │   ├── version.py
+    │           │   ├── warnings.py
+    │           │   ├── wheel.py
+    │           │   └── windows_support.py
+    │           ├── setuptools-80.9.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── entry_points.txt
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── sqlalchemy
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── connectors
+    │           │   ├── cyextension
+    │           │   ├── dialects
+    │           │   ├── engine
+    │           │   ├── event
+    │           │   ├── events.py
+    │           │   ├── exc.py
+    │           │   ├── ext
+    │           │   ├── future
+    │           │   ├── inspection.py
+    │           │   ├── log.py
+    │           │   ├── orm
+    │           │   ├── pool
+    │           │   ├── py.typed
+    │           │   ├── schema.py
+    │           │   ├── sql
+    │           │   ├── testing
+    │           │   ├── types.py
+    │           │   └── util
+    │           ├── sqlalchemy-2.0.44.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── twilio
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── auth_strategy
+    │           │   ├── base
+    │           │   ├── credential
+    │           │   ├── http
+    │           │   ├── jwt
+    │           │   ├── request_validator.py
+    │           │   ├── rest
+    │           │   └── twiml
+    │           ├── twilio-9.8.5.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   ├── licenses
+    │           │   └── top_level.txt
+    │           ├── typing_extensions-4.15.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── typing_extensions.py
+    │           ├── urllib3
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _base_connection.py
+    │           │   ├── _collections.py
+    │           │   ├── _request_methods.py
+    │           │   ├── _version.py
+    │           │   ├── connection.py
+    │           │   ├── connectionpool.py
+    │           │   ├── contrib
+    │           │   ├── exceptions.py
+    │           │   ├── fields.py
+    │           │   ├── filepost.py
+    │           │   ├── http2
+    │           │   ├── poolmanager.py
+    │           │   ├── py.typed
+    │           │   ├── response.py
+    │           │   └── util
+    │           ├── urllib3-2.5.0.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── werkzeug
+    │           │   ├── __init__.py
+    │           │   ├── __pycache__
+    │           │   ├── _internal.py
+    │           │   ├── _reloader.py
+    │           │   ├── datastructures
+    │           │   ├── debug
+    │           │   ├── exceptions.py
+    │           │   ├── formparser.py
+    │           │   ├── http.py
+    │           │   ├── local.py
+    │           │   ├── middleware
+    │           │   ├── py.typed
+    │           │   ├── routing
+    │           │   ├── sansio
+    │           │   ├── security.py
+    │           │   ├── serving.py
+    │           │   ├── test.py
+    │           │   ├── testapp.py
+    │           │   ├── urls.py
+    │           │   ├── user_agent.py
+    │           │   ├── utils.py
+    │           │   ├── wrappers
+    │           │   └── wsgi.py
+    │           ├── werkzeug-3.1.3.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE.txt
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   └── WHEEL
+    │           ├── wheel
+    │           │   ├── __init__.py
+    │           │   ├── __main__.py
+    │           │   ├── _bdist_wheel.py
+    │           │   ├── _setuptools_logging.py
+    │           │   ├── bdist_wheel.py
+    │           │   ├── cli
+    │           │   ├── macosx_libfile.py
+    │           │   ├── metadata.py
+    │           │   ├── util.py
+    │           │   ├── vendored
+    │           │   └── wheelfile.py
+    │           ├── wheel-0.45.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── LICENSE.txt
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── REQUESTED
+    │           │   ├── WHEEL
+    │           │   └── entry_points.txt
+    │           ├── wtforms
+    │           │   ├── __init__.py
+    │           │   ├── csrf
+    │           │   ├── fields
+    │           │   ├── form.py
+    │           │   ├── i18n.py
+    │           │   ├── locale
+    │           │   ├── meta.py
+    │           │   ├── utils.py
+    │           │   ├── validators.py
+    │           │   └── widgets
+    │           ├── wtforms-3.2.1.dist-info
+    │           │   ├── INSTALLER
+    │           │   ├── METADATA
+    │           │   ├── RECORD
+    │           │   ├── WHEEL
+    │           │   └── licenses
+    │           ├── yarl
+    │           │   ├── __init__.py
+    │           │   ├── _parse.py
+    │           │   ├── _path.py
+    │           │   ├── _query.py
+    │           │   ├── _quoters.py
+    │           │   ├── _quoting.py
+    │           │   ├── _quoting_c.cpython-312-x86_64-linux-gnu.so
+    │           │   ├── _quoting_c.pyx
+    │           │   ├── _quoting_py.py
+    │           │   ├── _url.py
+    │           │   └── py.typed
+    │           └── yarl-1.22.0.dist-info
+    │               ├── INSTALLER
+    │               ├── METADATA
+    │               ├── RECORD
+    │               ├── WHEEL
+    │               ├── licenses
+    │               └── top_level.txt
+    ├── lib64 -> lib
+    └── pyvenv.cfg
+
+290 directories, 1211 files

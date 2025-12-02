@@ -1,0 +1,18 @@
+/* ----------  SOS Alert Animations  ---------- */
+.tg-sos-btn .fa-bell {
+  color: var(--tg-warning);
+  animation: pulse-glow 1.2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% { text-shadow: 0 0 0px var(--tg-warning); }
+  50% { text-shadow: 0 0 8px var(--tg-warning); }
+  100% { text-shadow: 0 0 0px var(--tg-warning); }
+}
+
+/* Alert list styling */
+#sos-alert-list li {
+  border-bottom: 1px solid var(--tg-border);
+  padding: 6px 0;
+}
+#sos-alert-list li:last-child { border-bottom: none; }

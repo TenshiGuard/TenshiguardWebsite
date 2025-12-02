@@ -1,0 +1,107 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}SOS Preferences · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<h5 class="mb-3"><i class="fa-solid fa-gear me-2 text-danger"></i>SOS Preferences</h5>
+
+<div class="tg-card p-3">
+  <form id="prefs-form" class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Minimum Severity</label>
+      <select name="min_severity" id="min_severity" class="form-select bg-dark text-white">
+        <option value="info">Info</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="critical">Critical</option>
+      </select>
+      <div class="form-text text-muted small">
+        Only alerts with this severity or higher will trigger notifications.
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <label class="form-label d-block">Categories</label>
+      <div class="d-flex flex-wrap gap-3">
+        {% for c in ["system","network","login","malware","data_theft","compliance"] %}
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="{{c}}" id="cat_{{c}}">
+          <label class="form-check-label" for="cat_{{c}}">{{ c.replace('_',' ').title() }}</label>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="form-text text-muted small">
+        Choose which alert categories will be monitored and notified.
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label d-block">Delivery</label>
+      <div class="form-check form-switch mt-2">
+        <input class="form-check-input" type="checkbox" id="email_enabled">
+        <label class="form-check-label" for="email_enabled">Email</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="sms_enabled">
+        <label class="form-check-label" for="sms_enabled">SMS</label>
+      </div>
+      <div class="form-text text-muted small">
+        Email/SMS contacts are configured in your organization profile.
+      </div>
+    </div>
+
+    <div class="col-12">
+      <button class="btn btn-warning">Save Preferences</button>
+      <a href="{{ url_for('dashboard.alerts_dashboard') }}" class="btn btn-outline-light">View Alerts</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  (async function () {
+    // Load
+    try {
+      const res = await fetch("/api/sos/prefs");
+      const data = await res.json();
+      if (data) {
+        document.getElementById("min_severity").value = data.min_severity || "medium";
+        (data.categories || []).forEach(c => {
+          const el = document.getElementById("cat_" + c);
+          if (el) el.checked = true;
+        });
+        document.getElementById("email_enabled").checked = !!data.email_enabled;
+        document.getElementById("sms_enabled").checked = !!data.sms_enabled;
+      }
+    } catch (e) {
+      console.warn("Failed to load SOS prefs:", e);
+    }
+
+    // Save
+    document.getElementById("prefs-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const cats = Array.from(document.querySelectorAll("input[id^='cat_']:checked")).map(i => i.value);
+      const payload = {
+        min_severity: document.getElementById("min_severity").value,
+        categories: cats,
+        email_enabled: document.getElementById("email_enabled").checked,
+        sms_enabled: document.getElementById("sms_enabled").checked
+      };
+      try {
+        const save = await fetch("/api/sos/prefs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const j = await save.json();
+        if (j.ok) {
+          alert("Preferences saved.");
+        } else {
+          alert("Failed: " + (j.message || "Unknown error"));
+        }
+      } catch (err) {
+        alert("Network error while saving preferences.");
+      }
+    });
+  })();
+</script>
+{% endblock %}

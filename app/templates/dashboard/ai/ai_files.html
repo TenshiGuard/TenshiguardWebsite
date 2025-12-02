@@ -1,0 +1,103 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}AI File Scans - TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<!-- HEADER -->
+<div class="tg-section-header mt-2 mb-4 d-flex justify-content-between align-items-center">
+  <div>
+    <h3 class="fw-bold text-accent mb-0">
+      <i class="fa-solid fa-file-shield me-2"></i>
+      File Security Scans
+    </h3>
+    <p class="text-muted small mb-0">Deep analysis of file system anomalies, malware, and suspicious binaries.</p>
+  </div>
+  <div>
+    <a href="{{ url_for('dashboard.ai_insights_dashboard') }}" class="btn btn-outline-light btn-sm">
+      <i class="fa-solid fa-arrow-left me-2"></i> Back to Insights
+    </a>
+  </div>
+</div>
+<!-- MAIN PANEL -->
+<div class="tg-panel">
+  <div class="panel-header">
+    <span><i class="fa-solid fa-list me-2 text-info"></i>Detected File Anomalies</span>
+  </div>
+  <div class="panel-body p-0 table-responsive">
+    <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+      <thead>
+        <tr>
+          <th class="ps-3 py-3">Time (UTC)</th>
+          <th class="py-3">Device</th>
+          <th class="py-3">Severity</th>
+          <th class="py-3">Rule / Detection</th>
+          <th class="py-3">Details</th>
+          <th class="py-3">Mitigation</th>
+          <th class="py-3">AI Feedback</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alert in alerts %}
+        <tr>
+          <td class="ps-3 text-muted font-monospace">{{ alert.ts.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          <td>
+            {% if alert.device %}
+            <div class="fw-bold text-light">{{ alert.device.hostname }}</div>
+            <div class="small text-muted">{{ alert.device.ip_address }}</div>
+            {% else %}
+            <span class="text-muted small">Unknown</span>
+            {% endif %}
+          </td>
+          <td>
+            <span
+              class="badge bg-{{ 'danger' if alert.severity in ['high', 'critical'] else 'warning' if alert.severity == 'medium' else 'info' }} text-uppercase"
+              style="font-size: 0.7rem;">
+              {{ alert.severity }}
+            </span>
+          </td>
+          <td class="fw-bold text-light">{{ alert.event_type }}</td>
+          <td class="text-muted small">{{ alert.message }}</td>
+          <td class="text-success">{{ alert.mitigation or "None" }}</td>
+          <td>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-outline-success" onclick="submitFeedback({{ alert.id }}, 'true_positive')"
+                title="Correct Detection">
+                <i class="fa-solid fa-thumbs-up"></i>
+              </button>
+              <button class="btn btn-outline-danger" onclick="submitFeedback({{ alert.id }}, 'false_positive')"
+                title="False Positive">
+                <i class="fa-solid fa-thumbs-down"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<script>
+  async function submitFeedback(alertId, feedback) {
+    if (!confirm("Are you sure you want to mark this alert? This will train the AI engine.")) return;
+
+    try {
+      const res = await fetch('/api/ai/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ alert_id: alertId, feedback: feedback })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        location.reload();
+      } else {
+        alert("Error: " + data.error);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to submit feedback.");
+    }
+  }
+</script>
+{% endblock %}

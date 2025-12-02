@@ -1,47 +1,45 @@
 {% extends "base.html" %}
+{% block title %}TenshiGuard - Confirm Subscription{% endblock %}
+
+{% set body_class = "register-page" %}  {# ✅ Enables light mode for readability #}
+
 {% block content %}
-<section class="register-shell">
-  <div class="container-narrow">
-    <div class="wizard-head">
-      <div class="wizard-steps">
-        <div class="w-step done">1. Plan</div>
-        <div class="w-step active">2. Payment</div>
-        <div class="w-step">3. Organization</div>
-      </div>
-      <h2>Payment</h2>
-      <p class="muted">Authorizing subscription for <b>{{ sub.name }}</b> — ${{ "%.2f"|format(sub.price) }}/mo</p>
+<div class="container py-5 text-center">
+  <div class="card shadow-lg border-0 mx-auto" style="max-width: 600px;">
+    <div class="card-header bg-dark text-white">
+      <h3><i class="fa-solid fa-credit-card me-2"></i> Confirm Your Subscription</h3>
     </div>
+    <div class="card-body bg-white text-dark">
+      <h4 class="fw-bold mb-3">{{ plan|capitalize }} Plan</h4>
+      <p class="text-muted">Sector: {{ session['sector']|capitalize }}</p>
+      <hr>
 
-    <form method="POST" class="pay-grid">
-      <label class="pay-card">
-        <input type="radio" name="method" value="card" checked>
-        <div class="pay-inner">
-          <div class="pay-title">Credit / Debit</div>
-          <div class="muted">Visa, MasterCard, AMEX</div>
-        </div>
-      </label>
+      <h5 class="fw-bold mb-3">Plan Details</h5>
+      <ul class="list-unstyled text-start mx-auto" style="max-width: 400px;">
+        {% if plan == 'basic' %}
+          <li>✔ Core Endpoint Monitoring</li>
+          <li>✔ 5 Devices Limit</li>
+          <li>✖ No SOS Support</li>
+          <li>💲 Free Tier</li>
+        {% elif plan == 'professional' %}
+          <li>✔ Advanced Threat Detection</li>
+          <li>✔ Unlimited Devices</li>
+          <li>✔ SOS Emergency Support</li>
+          <li>💲 $49 / month</li>
+        {% else %}
+          <li>✔ 24/7 Premium Support</li>
+          <li>✔ Multi-Organization Control</li>
+          <li>✔ Dedicated Threat Response</li>
+          <li>💲 $99 / month</li>
+        {% endif %}
+      </ul>
 
-      <label class="pay-card">
-        <input type="radio" name="method" value="paypal">
-        <div class="pay-inner">
-          <div class="pay-title">PayPal</div>
-          <div class="muted">Pay with your PayPal account</div>
-        </div>
-      </label>
-
-      <label class="pay-card">
-        <input type="radio" name="method" value="crypto">
-        <div class="pay-inner">
-          <div class="pay-title">Crypto</div>
-          <div class="muted">BTC / USDT (test mode)</div>
-        </div>
-      </label>
-
-      <div class="actions">
-        <a class="btn ghost" href="{{ url_for('onboarding.plan') }}">Back</a>
-        <button class="btn primary" type="submit">Authorize & Continue</button>
-      </div>
-    </form>
+      <form method="POST" action="{{ url_for('register_flow.payment') }}">
+        <button type="submit" class="btn btn-outline-info w-100 py-2 mt-3 fw-semibold">
+          <i class="fa-solid fa-lock me-2"></i> Pay Securely
+        </button>
+      </form>
+    </div>
   </div>
-</section>
+</div>
 {% endblock %}

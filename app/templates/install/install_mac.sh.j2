@@ -1,0 +1,18 @@
+# app/templates/install/macos.sh.j2
+#!/bin/bash
+set -e
+
+BASE_URL="{{ base_url }}"
+ORG_TOKEN="{{ org_token }}"
+BASE_DIR="$HOME/Library/TenshiGuard"
+
+mkdir -p "$BASE_DIR"
+curl -sSL "$BASE_URL/install/agent/client/$ORG_TOKEN" -o "$BASE_DIR/agent_client.py"
+chmod +x "$BASE_DIR/agent_client.py"
+
+cat <<EOF > "$BASE_DIR/config.json"
+{"base_url":"$BASE_URL","org_token":"$ORG_TOKEN"}
+EOF
+
+echo "Run agent with: python3 $BASE_DIR/agent_client.py"
+echo "(launchd plist for persistence can be added next)"

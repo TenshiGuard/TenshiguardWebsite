@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Register Organization - TenshiGuard{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 850px;">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-dark text-white text-center py-3">
+      <h3><i class="fa-solid fa-shield-halved me-2"></i> Register Your Organization</h3>
+      <p class="text-muted small mb-0">Set up your organization, select a plan, and secure your endpoints instantly.</p>
+    </div>
+
+    <div class="card-body p-4 bg-light">
+      <form method="POST" action="{{ url_for('register_flow.org') }}" onsubmit="return validatePasswordForm();">
+
+        <!-- Organization Name -->
+        <div class="mb-3">
+          <label for="org_name" class="form-label fw-bold">Organization Name</label>
+          <input type="text" class="form-control" id="org_name" name="org_name"
+                 placeholder="e.g. Springfield College" required>
+        </div>
+
+        <!-- Sector Selection -->
+        <div class="mb-4">
+          <label for="sector" class="form-label fw-bold">Select Sector</label>
+          <select class="form-select" id="sector" name="sector" required>
+            <option value="">-- Choose a Sector --</option>
+            <option value="academic">Academic</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="hospitality">Hospitality</option>
+          </select>
+        </div>
+
+        <!-- Plan Selection -->
+        <h5 class="fw-bold text-center mb-3">Choose Your Plan</h5>
+        <div class="row text-center">
+          <!-- Basic -->
+          <div class="col-md-4 mb-3">
+            <div class="card h-100 plan-card border-primary shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title text-primary">Basic</h5>
+                <h3 class="fw-bold mb-3">$0</h3>
+                <ul class="list-unstyled small text-start">
+                  <li>✔ Core Monitoring</li>
+                  <li>✔ 5 Devices</li>
+                  <li>✖ SOS Support</li>
+                </ul>
+                <div class="form-check mt-3">
+                  <input class="form-check-input" type="radio" name="plan" id="plan_basic" value="basic" required>
+                  <label class="form-check-label" for="plan_basic">Select Basic</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional -->
+          <div class="col-md-4 mb-3">
+            <div class="card h-100 plan-card border-warning shadow-lg position-relative">
+              <div class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">Most Popular</div>
+              <div class="card-body">
+                <h5 class="card-title text-warning">Professional</h5>
+                <h3 class="fw-bold mb-3">$49</h3>
+                <ul class="list-unstyled small text-start">
+                  <li>✔ Advanced Threat Analytics</li>
+                  <li>✔ Unlimited Devices</li>
+                  <li>✔ SOS Support Enabled</li>
+                </ul>
+                <div class="form-check mt-3">
+                  <input class="form-check-input" type="radio" name="plan" id="plan_professional" value="professional">
+                  <label class="form-check-label" for="plan_professional">Select Professional</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="col-md-4 mb-3">
+            <div class="card h-100 plan-card border-success shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title text-success">Enterprise</h5>
+                <h3 class="fw-bold mb-3">$99</h3>
+                <ul class="list-unstyled small text-start">
+                  <li>✔ 24/7 Support</li>
+                  <li>✔ Multi-Org Dashboard</li>
+                  <li>✔ Incident Response Team</li>
+                </ul>
+                <div class="form-check mt-3">
+                  <input class="form-check-input" type="radio" name="plan" id="plan_enterprise" value="enterprise">
+                  <label class="form-check-label" for="plan_enterprise">Select Enterprise</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Details -->
+        <hr class="my-4">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="email" class="form-label fw-bold">Admin Email</label>
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="admin@example.com" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="password" class="form-label fw-bold">Password</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   placeholder="••••••••" required>
+            <small class="text-muted">Must include uppercase, lowercase, number, and symbol</small>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="confirm_password" class="form-label fw-bold">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                   placeholder="Re-enter your password" required>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-dark w-100 py-2 fw-bold mt-3">
+          Continue <i class="fa-solid fa-arrow-right ms-2"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Styling for plan cards -->
+<style>
+  .plan-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+</style>
+
+<!-- Password Validation -->
+<script>
+function validatePasswordForm() {
+  const password = document.getElementById("password").value;
+  const confirm = document.getElementById("confirm_password").value;
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+  if (!regex.test(password)) {
+    alert("Password must include uppercase, lowercase, number, and special character (min 8 chars).");
+    return false;
+  }
+  if (password !== confirm) {
+    alert("Passwords do not match.");
+    return false;
+  }
+  return true;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "install/base_install.html" %}
+{% block title %}Install TenshiGuard Agent on macOS{% endblock %}
+
+{% block content %}
+<div class="install-header fade-in">
+  <div class="install-title-block">
+    <div class="install-icon">
+      <i class="fa-brands fa-apple"></i>
+    </div>
+    <div>
+      <h1>Install TenshiGuard Agent on <span>macOS</span></h1>
+      <p>For Intel & Apple Silicon Macs (Monterey or later).</p>
+      <div class="mt-2">
+        <span class="badge-chip me-2">
+          <i class="fa-solid fa-building-shield"></i>
+          Org:
+          <span>{{ org.name }}</span>
+        </span>
+        <span class="badge-chip">
+          <i class="fa-solid fa-key"></i>
+          Token:
+          <span>{{ org_token }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard.setup_agent_page') }}" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i> Back to Setup Agent
+  </a>
+</div>
+
+<div class="install-card fade-in fade-delay-1">
+  <div class="step-heading">
+    <span class="step-pill">Step 1</span>
+    <span class="label">Open Terminal</span>
+  </div>
+
+  <div class="step-body">
+    <div class="prereq-panel mb-3">
+      <h6><i class="fa-solid fa-clipboard-check me-2"></i>Prerequisites</h6>
+      <ul class="mb-0 ps-3">
+        <li>Administrator access (password required for sudo).</li>
+        <li>Active internet connection.</li>
+        <li>Supported: macOS 10.15+ (Intel & Apple Silicon).</li>
+      </ul>
+    </div>
+
+    <p>
+      1. Press <strong>Command (⌘) + Space</strong> to open Spotlight Search.<br>
+      2. Type <strong>Terminal</strong> and press Enter.
+    </p>
+
+    <div class="code-label">Copy and paste this command:</div>
+    <div class="code-box" id="macCmd">
+      curl -sSL "{{ manager_url }}/install/agent/macos/{{ org_token }}" | sudo bash
+    </div>
+
+    <button class="copy-btn" onclick="copyFrom('macCmd', this)">
+      <i class="fa-solid fa-copy"></i> Copy Command
+    </button>
+
+    <ul class="check-list mt-3">
+      <li><span class="muted">Action:</span> Downloads the agent to <code>/opt/tenshiguard</code></li>
+      <li><span class="muted">Action:</span> Creates a LaunchDaemon for auto-start</li>
+      <li><span class="muted">Action:</span> Starts monitoring immediately</li>
+    </ul>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-2">
+  <div class="step-heading">
+    <span class="step-pill">Step 2</span>
+    <span class="label">Verify Installation</span>
+  </div>
+
+  <div class="step-body">
+    <p>Check if the agent service is loaded:</p>
+
+    <div class="code-box" id="macStatus">
+      sudo launchctl list | grep com.tenshiguard.agent
+    </div>
+
+    <button class="copy-btn secondary" onclick="copyFrom('macStatus', this)">
+      <i class="fa-solid fa-copy"></i> Copy
+    </button>
+
+    <div class="info-panel mt-3">
+      You should see a line with a process ID (e.g., <code>12345 com.tenshiguard.agent</code>). If it returns nothing,
+      the agent is not running.
+    </div>
+
+    <div class="troubleshoot-panel">
+      <h6><i class="fa-solid fa-triangle-exclamation me-2"></i>Troubleshooting</h6>
+      <ul>
+        <li><strong>"Operation not permitted"</strong>: Ensure Terminal has Full Disk Access in System Settings >
+          Privacy & Security.</li>
+        <li><strong>"Password"</strong>: When prompted for a password, type your Mac login password (it won't show on
+          screen) and press Enter.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-3">
+  <div class="step-heading">
+    <span class="step-pill">Step 3</span>
+    <span class="label">Uninstall (Optional)</span>
+  </div>
+
+  <div class="step-body">
+    <p>To remove the agent completely:</p>
+
+    <div class="code-box" id="macUninstall">
+      sudo launchctl unload /Library/LaunchDaemons/com.tenshiguard.agent.plist
+      sudo rm /Library/LaunchDaemons/com.tenshiguard.agent.plist
+      sudo rm -rf /opt/tenshiguard
+    </div>
+
+    <button class="copy-btn danger" onclick="copyFrom('macUninstall', this)">
+      <i class="fa-solid fa-trash-can"></i> Copy Uninstall Commands
+    </button>
+
+    <div class="warning-panel mt-3">
+      <strong>Note:</strong> uninstalling will stop new heartbeats and the
+      device will go offline in the dashboard.
+    </div>
+  </div>
+</div>
+{% endblock %}

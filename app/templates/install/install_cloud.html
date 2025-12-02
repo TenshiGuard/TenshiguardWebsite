@@ -1,0 +1,99 @@
+{% extends "install/base_install.html" %}
+{% block title %}Install TenshiGuard Agent – Cloud VM{% endblock %}
+
+{% block content %}
+<div class="install-header fade-in">
+  <div class="install-title-block">
+    <div class="install-icon">
+      <i class="fa-solid fa-cloud"></i>
+    </div>
+    <div>
+      <h1>TenshiGuard Agent for <span>Cloud VM</span></h1>
+      <p>Deploy on AWS, Azure, GCP, or other Linux-based cloud instances.</p>
+      <div class="mt-2">
+        <span class="badge-chip me-2">
+          <i class="fa-solid fa-building-shield"></i>
+          Org:
+          <span>{{ org.name }}</span>
+        </span>
+        <span class="badge-chip">
+          <i class="fa-solid fa-key"></i>
+          Token:
+          <span>{{ org_token }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard.setup_agent_page') }}" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i> Back to Setup Agent
+  </a>
+</div>
+
+<div class="install-card fade-in fade-delay-1">
+  <div class="step-heading">
+    <span class="step-pill">Step 1</span>
+    <span class="label">Run installer on the VM</span>
+  </div>
+
+  <div class="step-body">
+    <p>SSH into your cloud VM (Ubuntu, Debian, Rocky, etc.) and run:</p>
+
+    <div class="code-box" id="cloudCmd">
+curl -sSL "{{ url_for('agent_installer_bp.serve_install_script',
+                      org_token=org_token, _external=True) }}" | sudo bash
+    </div>
+
+    <button class="copy-btn" onclick="copyFrom('cloudCmd', this)">
+      <i class="fa-solid fa-copy"></i> Copy Command
+    </button>
+
+    <ul class="check-list mt-3">
+      <li>Installs the agent under <code>/opt/tenshiguard</code>.</li>
+      <li>Registers the VM into <strong>{{ org.name }}</strong>.</li>
+      <li>Starts a background service that sends heartbeats every ~15s.</li>
+    </ul>
+
+    <div class="info-panel mt-3">
+      <i class="fa-solid fa-circle-info me-1"></i>
+      Ensure your cloud security group / firewall allows outbound HTTPS from
+      the VM to reach your TenshiGuard manager URL.
+    </div>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-2">
+  <div class="step-heading">
+    <span class="step-pill">Step 2</span>
+    <span class="label">Verify in dashboard</span>
+  </div>
+
+  <div class="step-body">
+    <p>Once installed:</p>
+    <ul class="check-list">
+      <li>The VM should appear under <strong>Devices</strong> with its hostname.</li>
+      <li>Status should change to <strong>Online</strong>.</li>
+      <li>Events / heartbeats will start populating in your live event stream.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-3">
+  <div class="step-heading">
+    <span class="step-pill">Step 3</span>
+    <span class="label">Uninstall (optional)</span>
+  </div>
+
+  <div class="step-body">
+    <p>To remove the agent from the VM, run:</p>
+
+    <div class="code-box" id="cloudUninstall">
+sudo /opt/uninstall_tenshiguard.sh
+    </div>
+
+    <button class="copy-btn danger" onclick="copyFrom('cloudUninstall', this)">
+      <i class="fa-solid fa-trash-can"></i> Copy Uninstall Command
+    </button>
+  </div>
+</div>
+{% endblock %}

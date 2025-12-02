@@ -1,0 +1,199 @@
+{# app/templates/dashboard/ai/ai_insights.html #}
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}AI Insights – TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h3 class="mb-0">
+        <i class="fa-solid fa-brain me-2 text-accent"></i> AI Insights
+      </h3>
+      <small class="text-muted">
+        Rule-based AI engine summarizing suspicious files, processes, and network activity across your endpoints.
+      </small>
+    </div>
+    <div>
+      <button id="ai-refresh-btn" class="btn btn-outline-light btn-sm">
+        <i class="fa-solid fa-rotate me-1"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== TOP METRICS ===================== -->
+  <div class="row g-3 mb-4">
+    <!-- Total AI Signals -->
+    <div class="col-md-3">
+      <div class="card tg-card shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">Total AI Signals</span>
+            <i class="fa-solid fa-satellite-dish text-accent"></i>
+          </div>
+          <h3 id="ai-total-signals" class="mb-0">–</h3>
+          <small class="text-muted">All AI records (file, process, network, behavior).</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suspicious in last 24h -->
+    <div class="col-md-3">
+      <div class="card tg-card shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">Last 24h – High Severity</span>
+            <i class="fa-solid fa-fire-flame-curved text-danger"></i>
+          </div>
+          <h3 id="ai-high-24h" class="mb-0">–</h3>
+          <small class="text-muted">High / critical AI events, past 24 hours.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Max Risk Score -->
+    <div class="col-md-3">
+      <div class="card tg-card shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">Max Risk Score</span>
+            <i class="fa-solid fa-gauge-high text-warning"></i>
+          </div>
+          <h3 id="ai-risk-max" class="mb-0">–</h3>
+          <small class="text-muted">Highest device-level AI risk score.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Average Risk Score -->
+    <div class="col-md-3">
+      <div class="card tg-card shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">Average Risk</span>
+            <i class="fa-solid fa-chart-line text-info"></i>
+          </div>
+          <h3 id="ai-risk-avg" class="mb-0">–</h3>
+          <small class="text-muted">Average risk score across devices.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LATEST AI DETECTIONS ================= -->
+  <div class="card tg-card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">
+        <i class="fa-solid fa-radar me-2 text-accent"></i> Latest AI Detections
+      </h6>
+      <small class="text-muted" id="ai-latest-meta">Loading…</small>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped table-dark mb-0 align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Time (UTC)</th>
+              <th scope="col">Type</th>
+              <th scope="col">Severity</th>
+              <th scope="col">Rule</th>
+              <th scope="col">Detail</th>
+            </tr>
+          </thead>
+          <tbody id="ai-latest-body">
+            <tr>
+              <td colspan="5" class="text-center text-muted py-3">
+                <i class="fa-solid fa-spinner fa-spin me-2"></i> Loading AI events…
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= AI MODULES / DEEP DIVE ================= -->
+  <div class="row g-3 mb-4">
+
+    <!-- File Scans -->
+    <div class="col-md-3">
+      <a href="{{ url_for('dashboard.ai_files') }}" class="text-decoration-none text-reset">
+        <div class="card tg-card shadow-sm h-100 hover-lift">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">File Scans</span>
+              <i class="fa-solid fa-file-shield text-accent"></i>
+            </div>
+            <p class="text-muted small mb-0">
+              Hash-based detection of known malware and suspicious binaries.
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Process Events -->
+    <div class="col-md-3">
+      <a href="{{ url_for('dashboard.ai_processes') }}" class="text-decoration-none text-reset">
+        <div class="card tg-card shadow-sm h-100 hover-lift">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Process Events</span>
+              <i class="fa-solid fa-terminal text-info"></i>
+            </div>
+            <p class="text-muted small mb-0">
+              Suspicious process names and command-line patterns.
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Network Events -->
+    <div class="col-md-3">
+      <a href="{{ url_for('dashboard.ai_network') }}" class="text-decoration-none text-reset">
+        <div class="card tg-card shadow-sm h-100 hover-lift">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Network Events</span>
+              <i class="fa-solid fa-network-wired text-warning"></i>
+            </div>
+            <p class="text-muted small mb-0">
+              Sensitive destinations and unusual connections.
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Threat View -->
+    <div class="col-md-3">
+      <a href="{{ url_for('dashboard.ai_threats') }}" class="text-decoration-none text-reset">
+        <div class="card tg-card shadow-sm h-100 hover-lift">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Threat View</span>
+              <i class="fa-solid fa-skull-crossbones text-danger"></i>
+            </div>
+            <p class="text-muted small mb-0">
+              Consolidated view of high-risk findings for incident response.
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="text-muted small">
+    <i class="fa-regular fa-circle-question me-1"></i>
+    This view uses rule-based AI only. ML upgrades can be added later without UI changes.
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/ai/ai_insights.js') }}"></script>
+{% endblock %}

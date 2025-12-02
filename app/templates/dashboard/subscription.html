@@ -1,0 +1,222 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Subscription · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h4 class="mb-0 fw-semibold">Subscription Plan</h4>
+      <small class="text-muted">Manage your plan and explore available features</small>
+    </div>
+  </div>
+
+  {% if org and sub %}
+  <div class="card tg-card mb-4">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <strong>Current Plan</strong>
+      {% if sub.sos_enabled %}
+      <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalSosPrefs">
+        <i class="fa-solid fa-bell me-2"></i> Manage SOS Preferences
+      </button>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <p class="mb-1"><span class="text-muted small">Organization:</span> <strong>{{ org.name }}</strong></p>
+      <p class="mb-1"><span class="text-muted small">Sector:</span>
+        <span class="badge bg-info text-dark text-uppercase">{{ features.name }}</span>
+      </p>
+      <p class="mb-1">
+        <span class="text-muted small">Plan:</span>
+        <span class="badge bg-info text-dark text-uppercase">{{ sub.plan }}</span>
+        {% if sub.sos_enabled %}
+        <span class="badge bg-warning text-dark ms-1">
+          <i class="fa-solid fa-bell me-1"></i>SOS Enabled
+        </span>
+        {% endif %}
+      </p>
+      <p class="text-muted small mb-0">Status: {{ sub.status|capitalize }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ============================= -->
+  <!-- Features & Coverage Section  -->
+  <!-- ============================= -->
+  <div class="card tg-card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <div>
+        <i class="fa-solid fa-layer-group me-2"></i><strong>Features & Coverage</strong>
+        <small class="d-block text-muted">Sector: {{ features.name }}</small>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        {% for plan, items in [('basic', features.basic), ('professional', features.professional), ('enterprise', features.enterprise)] %}
+        <div class="col-12 col-lg-4">
+          <div class="p-3 rounded-3 shadow-card" style="background: var(--tg-card); border:1px solid var(--tg-border);">
+            <h6 class="fw-semibold text-accent text-uppercase mb-2">{{ plan }}</h6>
+            <ul class="mb-0 ps-3">
+              {% for item in items %}
+              <li class="small text-muted">{{ item }}</li>
+              {% endfor %}
+            </ul>
+            <div class="mt-3">
+              {% if sub and sub.plan != plan %}
+              <form method="POST">
+                <button class="btn btn-outline-light btn-sm" name="action" value="upgrade_{{ plan if plan != 'basic' else 'basic' }}">
+                  {% if plan == 'basic' %}Downgrade{% else %}Upgrade{% endif %}
+                </button>
+              </form>
+              {% else %}
+              <span class="badge bg-success">Current Plan</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- Compliance Frameworks Section -->
+  <!-- ============================= -->
+  {% if compliance %}
+  <div class="card tg-card mt-4">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <div>
+        <i class="fa-solid fa-shield-halved me-2 text-accent"></i>
+        <strong>Compliances & Security Frameworks</strong>
+        <small class="d-block text-muted">Ensuring sector-specific data integrity & protection</small>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row g-2">
+        {% for item in compliance %}
+        <div class="col-12 col-md-6">
+          <div class="p-2 rounded-3 border border-secondary d-flex align-items-center shadow-sm"
+               style="background: var(--tg-card);">
+            <i class="fa-solid fa-circle-check text-accent me-2"></i>
+            <span class="small text-muted">{{ item }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <p class="text-muted small mt-3">
+        Note: Compliance coverage is guided by TenshiGuard’s monitoring and alerting systems;
+        final adherence depends on your organization’s internal implementation and policy enforcement.
+      </p>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ===================================================== -->
+<!-- 🚨 SOS Preferences Modal (Active for SOS-Enabled Plans) -->
+<!-- ===================================================== -->
+{% if sub and sub.sos_enabled %}
+<div class="modal fade" id="modalSosPrefs" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content tg-card bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h6 class="modal-title text-info">
+          <i class="fa-solid fa-bell me-2"></i> SOS Alert Preferences
+        </h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="modal-prefs-form" class="row g-3">
+          <!-- Minimum Severity -->
+          <div class="col-12">
+            <label class="form-label">Minimum Severity Level</label>
+            <select id="modal_min_severity" class="form-select bg-secondary text-white border-0">
+              <option value="info">Info</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+            <small class="text-muted d-block mt-1">Alerts below this level will be ignored.</small>
+          </div>
+
+          <!-- Alert Categories -->
+          <div class="col-12">
+            <label class="form-label">Alert Categories</label>
+            <div class="d-flex flex-wrap gap-3">
+              {% for c in ["system","network","login","malware","data_theft","compliance"] %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="{{ c }}" id="modal_cat_{{ c }}">
+                <label class="form-check-label" for="modal_cat_{{ c }}">{{ c.replace('_',' ').title() }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Notification Switches -->
+          <div class="col-12 mt-2">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="modal_email_enabled">
+              <label class="form-check-label" for="modal_email_enabled">Enable Email Notifications</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="modal_sms_enabled">
+              <label class="form-check-label" for="modal_sms_enabled">Enable SMS Notifications</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+        <button id="modal_save_sos_prefs" class="btn btn-info">
+          <i class="fa-solid fa-save me-1"></i> Save Preferences
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS Logic -->
+<script>
+(async function() {
+  async function loadPrefs() {
+    try {
+      const res = await fetch("/api/sos/prefs");
+      const data = await res.json();
+      if (!data.prefs) return;
+      document.getElementById("modal_min_severity").value = data.prefs.min_severity;
+      (data.prefs.categories || []).forEach(c => {
+        const el = document.getElementById("modal_cat_" + c);
+        if (el) el.checked = true;
+      });
+      document.getElementById("modal_email_enabled").checked = !!data.prefs.email_enabled;
+      document.getElementById("modal_sms_enabled").checked = !!data.prefs.sms_enabled;
+    } catch (err) {
+      console.warn("⚠️ Failed to load SOS prefs:", err);
+    }
+  }
+
+  async function savePrefs() {
+    const cats = Array.from(document.querySelectorAll("input[id^='modal_cat_']:checked")).map(i => i.value);
+    const payload = {
+      min_severity: document.getElementById("modal_min_severity").value,
+      categories: cats,
+      email_enabled: document.getElementById("modal_email_enabled").checked,
+      sms_enabled: document.getElementById("modal_sms_enabled").checked
+    };
+    const res = await fetch("/api/sos/prefs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const j = await res.json();
+    alert(j.status === "ok" ? "Preferences saved." : ("Failed: " + (j.message || "")));
+  }
+
+  const modalEl = document.getElementById("modalSosPrefs");
+  modalEl.addEventListener("shown.bs.modal", loadPrefs);
+  document.getElementById("modal_save_sos_prefs").addEventListener("click", savePrefs);
+})();
+</script>
+{% endif %}
+{% endblock %}

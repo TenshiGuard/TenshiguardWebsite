@@ -1,0 +1,99 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Add User · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h4 class="mb-0 fw-semibold text-accent">Add New User</h4>
+      <small class="text-muted">
+        {% if plan == 'basic' %}
+          Basic Plan · <strong>{{ existing_users }}/5 Users</strong> used
+        {% else %}
+          {{ plan|capitalize }} Plan · <strong>Unlimited Users</strong>
+        {% endif %}
+      </small>
+    </div>
+    <a href="{{ url_for('dashboard.admin_dashboard') }}" class="btn btn-outline-light btn-sm">
+      <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <!-- User Count Progress (for Basic Plan only) -->
+  {% if plan == 'basic' %}
+  <div class="card tg-card mb-4">
+    <div class="card-body py-3">
+      <div class="d-flex justify-content-between small text-muted mb-1">
+        <span>Users Used</span>
+        <span>{{ existing_users }}/5</span>
+      </div>
+      <div class="progress" style="height: 10px; border-radius: 5px;">
+        {% set usage_pct = (existing_users / 5 * 100)|round(0) %}
+        <div class="progress-bar {% if usage_pct >= 80 %}bg-warning{% else %}bg-accent{% endif %}"
+             role="progressbar"
+             style="width: {{ usage_pct }}%;"
+             aria-valuenow="{{ usage_pct }}" aria-valuemin="0" aria-valuemax="100">
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Add User Form -->
+  <div class="card tg-card">
+    <div class="card-body">
+      <form method="POST" autocomplete="off">
+        <div class="row g-3">
+
+          <!-- Username -->
+          <div class="col-md-6">
+            <label class="form-label small text-muted">Username</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary" name="username" required>
+          </div>
+
+          <!-- Email -->
+          <div class="col-md-6">
+            <label class="form-label small text-muted">Email</label>
+            <input type="email" class="form-control bg-dark text-light border-secondary" name="email" required>
+          </div>
+
+          <!-- Password -->
+          <div class="col-md-6">
+            <label class="form-label small text-muted">Password</label>
+            <input type="password" class="form-control bg-dark text-light border-secondary" name="password" required>
+          </div>
+
+          <!-- Locked Sector (auto from admin org) -->
+          <div class="col-md-3">
+            <label class="form-label small text-muted">Sector</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary"
+                   value="{{ org.sector if org else 'N/A' }}" readonly>
+          </div>
+
+          <!-- Locked Organization (auto from admin org) -->
+          <div class="col-md-3">
+            <label class="form-label small text-muted">Organization</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary"
+                   value="{{ org.name if org else 'N/A' }}" readonly>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+          {% if plan == 'basic' and existing_users >= 5 %}
+            <button class="btn btn-secondary btn-sm" disabled>
+              Limit Reached (Upgrade Plan)
+            </button>
+          {% else %}
+            <button type="submit" class="btn btn-outline-info btn-sm">
+              <i class="fa-solid fa-user-plus me-2"></i> Add User
+            </button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

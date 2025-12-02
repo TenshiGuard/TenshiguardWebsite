@@ -1,0 +1,124 @@
+{% extends "install/base_install.html" %}
+{% block title %}TenshiGuard – Windows Agent Installer{% endblock %}
+
+{% block content %}
+<div class="install-header fade-in">
+  <div class="install-title-block">
+    <div class="install-icon">
+      <i class="fa-brands fa-windows"></i>
+    </div>
+    <div>
+      <h1>TenshiGuard <span>Windows Agent</span></h1>
+      <p>Secure, lightweight monitoring agent for Windows endpoints.</p>
+      <div class="mt-2">
+        <span class="badge-chip me-2">
+          <i class="fa-solid fa-building-shield"></i>
+          Org:
+          <span>{{ org.name }}</span>
+        </span>
+        <span class="badge-chip">
+          <i class="fa-solid fa-key"></i>
+          Token:
+          <span>{{ org_token }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard.setup_agent_page') }}" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i> Back to Setup Agent
+  </a>
+</div>
+
+<div class="install-card fade-in fade-delay-1">
+  <div class="step-heading">
+    <span class="step-pill">Step 1</span>
+    <span class="label">Prepare PowerShell</span>
+  </div>
+
+  <div class="step-body">
+    <div class="prereq-panel mb-3">
+      <h6><i class="fa-solid fa-clipboard-check me-2"></i>Prerequisites</h6>
+      <ul class="mb-0 ps-3">
+        <li>Administrator access to the computer.</li>
+        <li>Active internet connection.</li>
+      </ul>
+    </div>
+
+    <p>
+      1. Press the <strong>Windows Key</strong> on your keyboard.<br>
+      2. Type <strong>PowerShell</strong>.<br>
+      3. Right-click "Windows PowerShell" and select <strong>Run as Administrator</strong>.
+    </p>
+
+    <div class="code-label">Then copy and paste this command:</div>
+    <div class="code-box" id="winCmd">
+      iwr -UseBasicParsing "{{ manager_url }}/install/agent/windows/{{ org_token }}" | iex
+    </div>
+
+    <button class="copy-btn" onclick="copyFrom('winCmd', this)">
+      <i class="fa-solid fa-copy"></i> Copy Command
+    </button>
+
+    <ul class="check-list mt-3">
+      <li><span class="muted">Action:</span> Downloads the agent to <code>C:\TenshiGuard</code></li>
+      <li><span class="muted">Action:</span> Registers device to <strong>{{ org.name }}</strong></li>
+      <li><span class="muted">Action:</span> Starts background monitoring service</li>
+    </ul>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-2">
+  <div class="step-heading">
+    <span class="step-pill">Step 2</span>
+    <span class="label">Verify Installation</span>
+  </div>
+
+  <div class="step-body">
+    <p>Run this command to check if the agent is running:</p>
+
+    <div class="code-box" id="winStatus">
+      Get-ScheduledTask -TaskName "TenshiGuardAgent"
+    </div>
+
+    <button class="copy-btn secondary" onclick="copyFrom('winStatus', this)">
+      <i class="fa-solid fa-copy"></i> Copy
+    </button>
+
+    <div class="info-panel mt-3">
+      Look for <strong>State: Running</strong> or <strong>Ready</strong>. This means the agent is active and sending
+      data.
+    </div>
+
+    <div class="troubleshoot-panel">
+      <h6><i class="fa-solid fa-triangle-exclamation me-2"></i>Troubleshooting</h6>
+      <ul>
+        <li><strong>"Access Denied"</strong>: Ensure you ran PowerShell as Administrator.</li>
+        <li><strong>"Script is not digitally signed"</strong>: Run <code>Set-ExecutionPolicy RemoteSigned</code> and
+          try again.</li>
+        <li><strong>No data in dashboard?</strong>: Wait 30 seconds and refresh the Devices page.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-3">
+  <div class="step-heading">
+    <span class="step-pill">Step 3</span>
+    <span class="label">Uninstall (Optional)</span>
+  </div>
+
+  <div class="step-body">
+    <p>To completely remove the agent and stop monitoring:</p>
+
+    <div class="code-box" id="winUninstall">
+      Unregister-ScheduledTask -TaskName "TenshiGuardAgent" -Confirm:$false; Remove-Item -Recurse -Force
+      C:\TenshiGuard
+    </div>
+
+    <button class="copy-btn danger" onclick="copyFrom('winUninstall', this)">
+      <i class="fa-solid fa-trash-can"></i> Copy Uninstall Command
+    </button>
+  </div>
+</div>
+{% endblock %}

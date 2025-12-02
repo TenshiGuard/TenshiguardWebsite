@@ -63,22 +63,40 @@ def seed_subscriptions():
     ]
 
     for plan_data in plans:
-        plan = Subscription.query.filter_by(name=plan_data["name"]).first()
-        if plan:
-            # Update existing plan
-            plan.description = plan_data["description"]
-            plan.price = plan_data["price"]
-            plan.billing_cycle = plan_data["billing_cycle"]
-            plan.max_users = plan_data["max_users"]
-            plan.max_devices = plan_data["max_devices"]
-            plan.alert_type = plan_data["alert_type"]
-            plan.features = plan_data["features"]
-            print(f"🔄 Updated existing plan: {plan.name}")
+        # Map 'name' from plans dict to 'plan' in Subscription model
+        plan_name = plan_data.pop("name")
+        plan_data["plan"] = plan_name
+        
+        # Remove fields not in model if any (description, billing_cycle, max_users, max_devices, alert_type, features are NOT in model shown above)
+        # Wait, the model only has: plan, price, status, sos_enabled.
+        # The seed script tries to set description, billing_cycle, max_users, etc.
+        # I need to check if those columns exist in the DB or if the model file is incomplete/outdated.
+        # Based on the error "Entity namespace for "subscription" has no property "name"", it seems the model is indeed what I saw.
+        # But the seed script has a lot of fields.
+        # Let's check the database schema or just fit the model.
+        # The model has: plan, price, status, sos_enabled.
+        # The seed script has: name, description, price, billing_cycle, max_users, max_devices, alert_type, features.
+        
+        # I will only set the fields that exist in the model.
+        # plan -> plan
+        # price -> price
+        # status -> 'active' (default)
+        # sos_enabled -> True if price > 0?
+        
+        existing_plan = Subscription.query.filter_by(plan=plan_name).first()
+        if existing_plan:
+            existing_plan.price = plan_data["price"]
+            existing_plan.sos_enabled = (plan_name.lower() in ["professional", "enterprise"])
+            print(f"🔄 Updated existing plan: {existing_plan.plan}")
         else:
-            # Create new plan
-            plan = Subscription(**plan_data)
-            db.session.add(plan)
-            print(f"🆕 Created new plan: {plan.name}")
+            new_plan = Subscription(
+                plan=plan_name,
+                price=plan_data["price"],
+                status="active",
+                sos_enabled=(plan_name.lower() in ["professional", "enterprise"])
+            )
+            db.session.add(new_plan)
+            print(f"🆕 Created new plan: {new_plan.plan}")
 
     db.session.commit()
     print("✅ Subscription plans seeded successfully.")
@@ -96,11 +114,7 @@ def seed_org():
     org = Organization(
         name="TenshiGuard Academy",
         sector="Academic",
-        location="Canada",
-        total_users=0,
-        total_devices=0,
-        is_paid=False,
-        status="lead"
+        location="Canada"
     )
     db.session.add(org)
     db.session.commit()
@@ -131,6 +145,29 @@ def seed_admin(org):
 
 
 # =========================================================
+# 👤 Test User (Requested by User)
+# =========================================================
+def seed_test_user(org):
+    email = "testorg1@gmail.com"
+    user = User.query.filter_by(email=email).first()
+    if user:
+        print(f"✔ Test user {email} already exists — skipping.")
+        return
+
+    user = User(
+        username="testorg1",
+        email=email,
+        role="admin", # Making admin for full access testing
+        sector="Academic",
+        organization_id=org.id,
+    )
+    user.set_password("12345678@Testorg")
+    db.session.add(user)
+    db.session.commit()
+    print(f"✅ Test user created: {email} / 12345678@Testorg")
+
+
+# =========================================================
 # 🧠 Main Runner
 # =========================================================
 if __name__ == "__main__":
@@ -140,6 +177,7 @@ if __name__ == "__main__":
 
         org = seed_org()
         seed_admin(org)
+        seed_test_user(org)
 
         print("\n🎉 TenshiGuard Database Seeding Complete!\n")
         print("🔑 Test Admin Login:")

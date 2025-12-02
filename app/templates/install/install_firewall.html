@@ -1,0 +1,103 @@
+{% extends "install/base_install.html" %}
+{% block title %}Install TenshiGuard Agent – Firewall / Edge{% endblock %}
+
+{% block content %}
+<div class="install-header fade-in">
+  <div class="install-title-block">
+    <div class="install-icon">
+      <i class="fa-solid fa-tower-broadcast"></i>
+    </div>
+    <div>
+      <h1>TenshiGuard Agent for <span>Firewall / Edge</span></h1>
+      <p>Use this on Linux-based firewalls, routers, and gateway devices.</p>
+      <div class="mt-2">
+        <span class="badge-chip me-2">
+          <i class="fa-solid fa-building-shield"></i>
+          Org:
+          <span>{{ org.name }}</span>
+        </span>
+        <span class="badge-chip">
+          <i class="fa-solid fa-key"></i>
+          Token:
+          <span>{{ org_token }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard.setup_agent_page') }}" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i> Back to Setup Agent
+  </a>
+</div>
+
+<div class="install-card fade-in fade-delay-1">
+  <div class="step-heading">
+    <span class="step-pill">Step 1</span>
+    <span class="label">Run the Linux installer</span>
+  </div>
+
+  <div class="step-body">
+    <p>
+      On your firewall / edge device shell (if it exposes a standard Linux
+      userland with <code>bash</code> and <code>curl</code>), run:
+    </p>
+
+    <div class="code-box" id="fwCmd">
+curl -sSL "{{ url_for('agent_installer_bp.serve_install_script',
+                      org_token=org_token, _external=True) }}" | sudo bash
+    </div>
+
+    <button class="copy-btn" onclick="copyFrom('fwCmd', this)">
+      <i class="fa-solid fa-copy"></i> Copy Command
+    </button>
+
+    <ul class="check-list mt-3">
+      <li>Installs the Linux agent into <code>/opt/tenshiguard</code>.</li>
+      <li>Registers the node as a monitored edge device.</li>
+      <li>Starts sending telemetry & heartbeats to TenshiGuard.</li>
+    </ul>
+
+    <div class="info-panel mt-3">
+      <strong>Tip:</strong> On pfSense or appliances with locked-down shells,
+      you may need a separate sidecar Linux VM to forward firewall logs to
+      TenshiGuard instead of installing directly on the device.
+    </div>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-2">
+  <div class="step-heading">
+    <span class="step-pill">Step 2</span>
+    <span class="label">Verify connectivity</span>
+  </div>
+
+  <div class="step-body">
+    <p>Confirm the device is appearing in your dashboard:</p>
+
+    <ul class="check-list">
+      <li>Open <strong>Devices → Status</strong> and look for this node.</li>
+      <li>Ensure it shows as <strong>Online</strong> and heartbeats are updating.</li>
+      <li>Optionally, tail the logs on the box for <code>[HEARTBEAT]</code> entries.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="install-card fade-in fade-delay-3">
+  <div class="step-heading">
+    <span class="step-pill">Step 3</span>
+    <span class="label">Uninstall (optional)</span>
+  </div>
+
+  <div class="step-body">
+    <p>To remove the agent from the firewall host:</p>
+
+    <div class="code-box" id="fwUninstall">
+sudo /opt/uninstall_tenshiguard.sh
+    </div>
+
+    <button class="copy-btn danger" onclick="copyFrom('fwUninstall', this)">
+      <i class="fa-solid fa-trash-can"></i> Copy Uninstall Command
+    </button>
+  </div>
+</div>
+{% endblock %}

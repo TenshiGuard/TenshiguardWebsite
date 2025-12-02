@@ -1,0 +1,5 @@
+Write-Host "🧹 Uninstalling TenshiGuard Agent..."
+Stop-Service -Name "TenshiGuardAgent" -ErrorAction SilentlyContinue
+Set-Service -Name "TenshiGuardAgent" -StartupType Disabled
+Remove-Item -Path "C:\Program Files\TenshiGuard" -Recurse -Force -ErrorAction SilentlyContinue
+Write-Host "✅ TenshiGuard Agent removed successfully."

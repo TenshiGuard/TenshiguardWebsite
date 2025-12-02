@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "🧹 Uninstalling TenshiGuard Agent..."
+sudo systemctl stop tenshiguard-agent.service 2>/dev/null
+sudo systemctl disable tenshiguard-agent.service 2>/dev/null
+sudo rm -rf /opt/tenshiguard
+sudo rm -f /etc/systemd/system/tenshiguard-agent.service
+echo "✅ TenshiGuard Agent removed successfully."

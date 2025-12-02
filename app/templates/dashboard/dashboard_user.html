@@ -1,0 +1,38 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}User Dashboard · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<h4 class="mb-4"><i class="fa-solid fa-chart-line me-2 text-info"></i>User Dashboard</h4>
+
+<div class="row mb-4 text-center">
+  <div class="col-md-4 mb-3">
+    <div class="card tg-card"><div class="card-body">
+      <h6>Total Devices</h6><h3 class="fw-bold">{{ agg.total }}</h3>
+    </div></div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card tg-card"><div class="card-body">
+      <h6>Online</h6><h3 class="fw-bold text-success">{{ agg.online }}</h3>
+    </div></div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card tg-card"><div class="card-body">
+      <h6>Unusual</h6><h3 class="fw-bold text-warning">{{ agg.unusual }}</h3>
+    </div></div>
+  </div>
+</div>
+
+<div class="card tg-card">
+  <div class="card-header">Recent Security Events</div>
+  <div class="card-body">
+    <ul class="mb-0">
+      {% for e in events %}
+      <li class="mb-2">
+        <span class="badge bg-secondary">{{ e.severity|capitalize }}</span>
+        {{ e.event_type }} — <small class="text-muted">{{ e.timestamp.strftime("%Y-%m-%d %H:%M UTC") }}</small>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

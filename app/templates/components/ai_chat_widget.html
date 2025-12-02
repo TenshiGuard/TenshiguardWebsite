@@ -1,0 +1,138 @@
+<!-- AI Chat Widget -->
+<div id="ai-chat-widget" class="ai-chat-widget collapsed">
+    <div class="chat-header" onclick="toggleChat()">
+        <div class="d-flex align-items-center">
+            <i class="fa-solid fa-robot me-2"></i>
+            <span class="fw-bold">TenshiGuard AI</span>
+        </div>
+        <i class="fa-solid fa-chevron-up toggle-icon"></i>
+    </div>
+
+    <div class="chat-body" id="chat-body">
+        <div class="chat-message bot">
+            <div class="message-content">
+                Hello! I'm your AI security assistant. How can I help you today?
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ask about threats, anomalies..."
+            onkeypress="handleChatInput(event)">
+        <button class="btn btn-sm btn-primary" onclick="sendChatMessage()">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<style>
+    .ai-chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        background: #1e1e2f;
+        border: 1px solid #333;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .ai-chat-widget.collapsed {
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .ai-chat-widget:not(.collapsed) {
+        height: 500px;
+    }
+
+    .chat-header {
+        padding: 12px 15px;
+        background: #0066ff;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .chat-body {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background: #14141f;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .chat-message {
+        display: flex;
+        margin-bottom: 5px;
+    }
+
+    .chat-message.user {
+        justify-content: flex-end;
+    }
+
+    .chat-message.bot {
+        justify-content: flex-start;
+    }
+
+    .message-content {
+        max-width: 80%;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .chat-message.user .message-content {
+        background: #0066ff;
+        color: white;
+        border-bottom-right-radius: 2px;
+    }
+
+    .chat-message.bot .message-content {
+        background: #2c2c3e;
+        color: #e0e0e0;
+        border-bottom-left-radius: 2px;
+    }
+
+    .chat-input-area {
+        padding: 10px;
+        border-top: 1px solid #333;
+        display: flex;
+        gap: 10px;
+        background: #1e1e2f;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .chat-input-area input {
+        flex: 1;
+        background: #14141f;
+        border: 1px solid #333;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        outline: none;
+    }
+
+    .chat-input-area input:focus {
+        border-color: #0066ff;
+    }
+
+    .toggle-icon {
+        transition: transform 0.3s;
+    }
+
+    .ai-chat-widget:not(.collapsed) .toggle-icon {
+        transform: rotate(180deg);
+    }
+</style>

@@ -1,0 +1,189 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Incident #{{ incident.id }} · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+<div class="container-fluid py-3">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h4 class="fw-semibold mb-0 text-accent">
+        Incident #{{ incident.id }} – {{ incident.title }}
+      </h4>
+      <small class="text-muted">
+        Correlated from AI + event stream for {{ org.name if org else 'organization' }}.
+      </small>
+    </div>
+    <a href="{{ url_for('dashboard.incidents_dashboard') }}" class="btn btn-outline-light btn-sm">
+      ← Back to Incidents
+    </a>
+  </div>
+
+  <!-- Summary card -->
+  <div class="row mb-3">
+    <div class="col-lg-8 mb-3">
+      <div class="tg-card p-3 h-100">
+        <div class="d-flex align-items-center mb-2">
+          {# Severity badge #}
+          {% set sev = (incident.severity or '').lower() %}
+          {% if sev == 'critical' %}
+            {% set sev_cls = 'severity-critical' %}
+          {% elif sev == 'high' %}
+            {% set sev_cls = 'severity-high' %}
+          {% elif sev == 'medium' %}
+            {% set sev_cls = 'severity-medium' %}
+          {% elif sev == 'low' %}
+            {% set sev_cls = 'severity-low' %}
+          {% else %}
+            {% set sev_cls = 'severity-info' %}
+          {% endif %}
+
+          <span class="severity-badge {{ sev_cls }} me-2">
+            {{ incident.severity|upper }}
+          </span>
+
+          <span class="badge bg-secondary-subtle text-secondary-emphasis me-2">
+            {{ incident.category or 'uncategorized' }}
+          </span>
+
+          {# Status badge #}
+          {% set st = (incident.status or '').lower() %}
+          {% if st in ['open', 'investigating', 'escalated'] %}
+            {% set st_cls = 'badge bg-warning-subtle text-warning-emphasis' %}
+          {% elif st in ['closed', 'resolved'] %}
+            {% set st_cls = 'badge bg-success-subtle text-success-emphasis' %}
+          {% else %}
+            {% set st_cls = 'badge bg-secondary-subtle text-secondary-emphasis' %}
+          {% endif %}
+
+          <span class="{{ st_cls }}">
+            {{ incident.status or 'unknown' }}
+          </span>
+        </div>
+
+        <div class="mb-2">
+          <strong>Risk Score:</strong>
+          {% if incident.risk_score is not none %}
+            {{ incident.risk_score }}/100
+          {% else %}
+            —
+          {% endif %}
+        </div>
+
+        {% if incident.mitre_tag %}
+          <div class="mb-2">
+            <strong>MITRE Technique:</strong> {{ incident.mitre_tag }}
+          </div>
+        {% endif %}
+
+        <div class="mb-2">
+          <strong>Created:</strong>
+          {{ incident.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") if incident.created_at else "—" }}
+        </div>
+        <div class="mb-3">
+          <strong>Last Updated:</strong>
+          {{ incident.updated_at.strftime("%Y-%m-%d %H:%M:%S %Z") if incident.updated_at else "—" }}
+        </div>
+
+        <div>
+          <strong>Description:</strong>
+          <p class="mb-0">
+            {{ incident.description or "No description provided." }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side meta -->
+    <div class="col-lg-4 mb-3">
+      <div class="tg-card p-3 h-100">
+        <h6 class="fw-semibold mb-3 text-accent">Summary</h6>
+        <ul class="list-unstyled small mb-0">
+          <li class="mb-1">
+            <span class="text-muted">Incident ID:</span>
+            <span class="ms-1">#{{ incident.id }}</span>
+          </li>
+          <li class="mb-1">
+            <span class="text-muted">Organization:</span>
+            <span class="ms-1">{{ org.name if org else "—" }}</span>
+          </li>
+          <li class="mb-1">
+            <span class="text-muted">Linked Events:</span>
+            <span class="ms-1">{{ events|length }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Linked events timeline -->
+  <div class="tg-card p-0 shadow-card">
+    <div class="p-3 border-bottom">
+      <h6 class="fw-semibold mb-0 text-accent">Linked Events Timeline</h6>
+      <small class="text-muted">
+        Events correlated into this incident (ordered by time).
+      </small>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr class="text-accent">
+            <th style="min-width: 160px;">Time (UTC)</th>
+            <th>Device</th>
+            <th>Category</th>
+            <th>Severity</th>
+            <th>Action</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if events %}
+            {% for ev in events %}
+              {% set sev = (ev.severity or '').lower() %}
+              {% if sev == 'critical' %}
+                {% set sev_cls = 'severity-critical' %}
+              {% elif sev == 'high' %}
+                {% set sev_cls = 'severity-high' %}
+              {% elif sev == 'medium' %}
+                {% set sev_cls = 'severity-medium' %}
+              {% elif sev == 'low' %}
+                {% set sev_cls = 'severity-low' %}
+              {% else %}
+                {% set sev_cls = 'severity-info' %}
+              {% endif %}
+
+              <tr>
+                <td class="text-nowrap">
+                  {{ ev.ts.strftime("%Y-%m-%d %H:%M:%S UTC") if ev.ts else "—" }}
+                </td>
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ ev.device.device_name if ev.device else "Unlinked" }}</span>
+                    <small class="text-muted">{{ ev.mac or "—" }}</small>
+                  </div>
+                </td>
+                <td>{{ ev.category or ev.event_type or "—" }}</td>
+                <td>
+                  <span class="severity-badge {{ sev_cls }}">
+                    {{ ev.severity|upper }}
+                  </span>
+                </td>
+                <td>{{ ev.action or "—" }}</td>
+                <td class="small">
+                  {{ ev.detail or ev.message or "—" }}
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="6" class="text-center text-muted py-3">
+                No events are currently linked to this incident.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

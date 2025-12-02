@@ -1,0 +1,5 @@
+{
+  "backend_url": "http://192.168.56.1:5000",
+  "api_path": "/api/ai/ingest",
+  "device_name_override": null
+}

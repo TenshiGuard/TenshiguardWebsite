@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Suspicious PowerShell",
+    "severity": "high",
+    "risk": 78,
+    "match": {
+      "process_name": ["powershell.exe", "pwsh.exe"],
+      "cmdline_contains": ["-enc", "Base64"]
+    },
+    "detail": "Encoded PowerShell command detected"
+  }
+]

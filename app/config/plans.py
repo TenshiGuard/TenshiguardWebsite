@@ -1,55 +1,46 @@
 # app/config/plans.py
+
 PLAN_CATALOG = {
-    1: {
-        "id": 1,
-        "slug": "basic",
+    "basic": {
         "name": "Basic",
-        "price": 29,
-        "max_users": 3,
-        "max_devices": 5,
+        "price": 0,
+        "devices": 5,
         "features": [
-            "Basic endpoint monitoring",
-            "Email alerts",
+            "Core endpoint monitoring",
+            "Basic analytics dashboard",
+            "Email alerts"
         ],
-        # Feature gates
-        "supports_sms": False,
-        "supports_sos_voice": False,   # SOS not in Basic
-        "supports_ai": False,
+        "sos_enabled": False,
     },
-    2: {
-        "id": 2,
-        "slug": "pro",
+    "professional": {
         "name": "Professional",
-        "price": 79,
-        "max_users": 10,
-        "max_devices": 20,
+        "price": 49,
+        "devices": "Unlimited",
         "features": [
-            "Advanced reporting dashboard",
-            "Custom alert rules",
-            "Email & SMS alerts",
+            "Advanced threat analytics",
+            "Unlimited device management",
+            "Email + SMS alerts",
+            "Priority support",
+            "SOS feature access"
         ],
-        "supports_sms": True,
-        "supports_sos_voice": True,    # ✅ SOS in Pro
-        "supports_ai": False,
+        "sos_enabled": True,
     },
-    3: {
-        "id": 3,
-        "slug": "enterprise",
+    "enterprise": {
         "name": "Enterprise",
-        "price": 199,
-        "max_users": None,
-        "max_devices": None,
+        "price": 99,
+        "devices": "Unlimited",
         "features": [
-            "Unlimited users & devices",
-            "AI-based analytics",
-            "Role-based access control",
-            "24/7 priority response",
+            "24/7 security operations support",
+            "Multi-organization dashboard",
+            "Incident response automation",
+            "SOS escalation workflow",
+            "Dedicated security advisor"
         ],
-        "supports_sms": True,
-        "supports_sos_voice": True,    # ✅ SOS in Enterprise
-        "supports_ai": True,
+        "sos_enabled": True,
     },
 }
 
-def plan_for_id(plan_id: int):
-    return PLAN_CATALOG.get(int(plan_id))
+
+def plan_for_id(plan_id: str):
+    """Return plan details safely."""
+    return PLAN_CATALOG.get(plan_id.lower(), PLAN_CATALOG["basic"])

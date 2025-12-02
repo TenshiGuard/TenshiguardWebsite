@@ -1,0 +1,254 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Setup Agent · TenshiGuard{% endblock %}
+
+{% block dash_content %}
+
+<style>
+  /* Cybersecurity premium theme */
+  body,
+  .bg-dark {
+    background: #0d0f12 !important;
+  }
+
+  .tg-card {
+    background: #14171c !important;
+    border: 1px solid rgba(0, 200, 255, 0.12);
+    border-radius: 12px;
+    transition: 0.25s ease;
+  }
+
+  .tg-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.45);
+  }
+
+  /* Section title */
+  .step-banner {
+    padding: 14px;
+    background: linear-gradient(90deg, #0dcaf0, #805ad5);
+    border-radius: 10px;
+    color: #000;
+    font-weight: 700;
+    letter-spacing: .4px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 200, 255, .3);
+  }
+
+  /* Code block */
+  .code-box {
+    background: #0b0e13;
+    color: #7dd6ff;
+    border: 1px solid #2b3a45;
+    padding: 10px;
+    font-family: monospace;
+    border-radius: 6px;
+    white-space: pre-wrap;
+  }
+
+  /* Buttons */
+  .copy-btn {
+    margin-top: 5px;
+    background: #0dcaf0;
+    border: none;
+    color: #000;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+  }
+
+  .copy-btn:hover {
+    background: #1ad1ff;
+  }
+
+  .btn-info,
+  .btn-primary,
+  .btn-success,
+  .btn-warning,
+  .btn-danger {
+    font-weight: 600 !important;
+  }
+
+  .fade-in {
+    animation: fadeIn .7s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
+<!-- PAGE TITLE -->
+<div class="fade-in">
+  <div class="step-banner">
+    <i class="fa-solid fa-shield-halved me-2"></i> Deploy TenshiGuard Agent
+    <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7em;">v1.1 (Fixed)</span>
+    <div class="text-white small mt-1" style="font-size: 0.6em; opacity: 0.7;">Rendered: {{ now_utc }}</div>
+  </div>
+</div>
+
+<!-- TOKEN DISPLAY -->
+<div class="alert alert-dark border-info fade-in mb-4">
+  <strong>Your Secure Agent Token:</strong>
+  <span class="ms-2 text-accent fw-bold">{{ agent_token }}</span>
+
+  <button class="btn btn-sm btn-outline-info ms-3" onclick="copyText('{{ agent_token }}', this)">
+    <i class="fa-solid fa-copy me-1"></i> Copy Token
+  </button>
+</div>
+
+<h4 class="fw-bold fade-in mb-3">
+  <i class="fa-solid fa-microchip text-info me-2"></i> Select a Platform
+</h4>
+
+<div class="row g-4 fade-in">
+
+  <!-- LINUX -->
+  <div class="col-md-6 col-xl-4">
+    <div class="card tg-card shadow-lg h-100">
+      <div class="card-body">
+
+        <h5 class="fw-bold text-info"><i class="fa-brands fa-linux me-2"></i> Linux / Servers</h5>
+        <p class="text-muted small">Ubuntu, Debian, Kali, CentOS</p>
+
+        <div class="code-box" id="cmd-linux">
+          curl -sSL "{{ url_for('agent_installer_bp.serve_install_script', org_token=agent_token, _external=True) }}" |
+          sudo bash
+        </div>
+
+        <button class="copy-btn btn-sm" onclick="copyCommand('cmd-linux', this)">
+          <i class="fa-solid fa-copy"></i> Copy Command
+        </button>
+
+        <button class="btn btn-info btn-sm"
+          onclick="window.open('{{ url_for('agent_installer_bp.linux_guide', org_token=agent_token) }}','_blank')">
+          <i class="fa-solid fa-book"></i> Full Guide
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MACOS -->
+  <div class="col-md-6 col-xl-4">
+    <div class="card tg-card shadow-lg h-100">
+      <div class="card-body">
+
+        <h5 class="fw-bold text-primary"><i class="fa-brands fa-apple me-2"></i> macOS</h5>
+        <p class="text-muted small">Intel & Apple Silicon</p>
+
+        <div class="code-box" id="cmd-macos">
+          curl -sSL "{{ url_for('agent_installer_bp.macos_sh', org_token=agent_token, _external=True) }}" | sudo bash
+        </div>
+
+        <button class="copy-btn btn-sm" onclick="copyCommand('cmd-macos', this)">
+          <i class="fa-solid fa-copy"></i> Copy Command
+        </button>
+
+        <button class="btn btn-primary btn-sm"
+          onclick="window.open('{{ url_for('agent_installer_bp.macos_guide', org_token=agent_token) }}','_blank')">
+          <i class="fa-solid fa-book"></i> Full Guide
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- WINDOWS -->
+  <div class="col-md-6 col-xl-4">
+    <div class="card tg-card shadow-lg h-100">
+      <div class="card-body">
+
+        <h5 class="fw-bold text-success"><i class="fa-brands fa-windows me-2"></i> Windows (PowerShell)</h5>
+        <p class="text-muted small">Windows 10/11 & Server 2016+</p>
+
+        <div class="code-box" id="cmd-win">
+          iwr -UseBasicParsing "{{ url_for('agent_installer_bp.windows_ps1', org_token=agent_token, _external=True) }}"
+          | iex
+        </div>
+
+        <button class="copy-btn btn-sm" onclick="copyCommand('cmd-win', this)">
+          <i class="fa-solid fa-copy"></i> Copy Command
+        </button>
+
+        <button class="btn btn-success btn-sm"
+          onclick="window.open('{{ url_for('agent_installer_bp.windows_guide', org_token=agent_token) }}','_blank')">
+          <i class="fa-solid fa-book"></i> Full Guide
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREWALL -->
+  <div class="col-md-6 col-xl-4">
+    <div class="card tg-card shadow h-100">
+      <div class="card-body">
+
+        <h5 class="fw-bold text-warning"><i class="fa-solid fa-network-wired me-2"></i> Firewall / Edge</h5>
+        <p class="text-muted small">pfSense, routers, Linux gateways</p>
+
+        <button class="btn btn-warning btn-sm"
+          onclick="window.open('{{ url_for('agent_installer_bp.firewall_guide', org_token=agent_token) }}','_blank')">
+          <i class="fa-solid fa-book"></i> Full Guide
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOUD -->
+  <div class="col-md-6 col-xl-4">
+    <div class="card tg-card shadow h-100">
+      <div class="card-body">
+
+        <h5 class="fw-bold text-info"><i class="fa-solid fa-cloud me-2"></i> Cloud VM</h5>
+        <p class="text-muted small">AWS, Azure, GCP, OCI</p>
+
+        <button class="btn btn-info btn-sm"
+          onclick="window.open('{{ url_for('agent_installer_bp.cloud_guide', org_token=agent_token) }}','_blank')">
+          <i class="fa-solid fa-book"></i> Full Guide
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ANDROID -->
+  <div class="col-md-6 col-xl-4">
+    <div class="card tg-card shadow h-100">
+      <div class="card-body">
+
+        <h5 class="fw-bold text-danger"><i class="fa-brands fa-android me-2"></i> Android</h5>
+        <p class="text-muted small">Mobile agent preview</p>
+
+        <button class="btn btn-danger btn-sm"
+          onclick="window.open('{{ url_for('agent_installer_bp.android_guide') }}','_blank')">
+          <i class="fa-solid fa-eye"></i> Preview Installer
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function copyCommand(id, btn) {
+    let el = document.getElementById(id);
+    let text = el.innerText.trim();
+    navigator.clipboard.writeText(text);
+    btn.innerHTML = "✔ Copied!";
+    setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Command', 1500);
+  }
+
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text);
+    btn.innerHTML = "✔ Copied!";
+    setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Token', 1500);
+  }
+</script>
+
+{% endblock %}

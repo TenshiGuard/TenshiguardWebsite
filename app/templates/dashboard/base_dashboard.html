@@ -1,108 +1,228 @@
 {% extends "base.html" %}
-{% block title %}TenshiGuard Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard-container d-flex">
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar -->
+  <div class="sidebar border-end d-flex flex-column p-3" id="sidebar-wrapper" style="width: 220px; min-height: 100vh;">
+    <div class="sidebar-heading text-white fw-bold mb-4 fs-4 d-flex align-items-center">
+      <i class="fa-solid fa-shield-halved me-2 text-accent"></i> TenshiGuard
+    </div>
 
-<!-- 🌐 Sidebar -->
-<nav class="sidebar bg-dark text-white p-3">
-  <div class="sidebar-header mb-4 text-center">
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" height="40" class="mb-2">
-    <h5 class="fw-bold">TenshiGuard</h5>
-    <p class="text-muted small">Endpoint Security Console</p>
+    <ul class="nav flex-column mb-auto">
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.index') }}"
+          class="nav-link text-white {% if request.endpoint == 'dashboard.index' %}active{% endif %}">
+          <i class="fa-solid fa-chart-line me-2"></i> Overview
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.devices') }}"
+          class="nav-link text-white {% if 'devices' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-desktop me-2"></i> Devices
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.live_events') }}"
+          class="nav-link text-white {% if 'live_events' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-tower-broadcast me-2"></i> Live Events
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.setup_agent_page') }}"
+          class="nav-link text-white {% if 'setup_agent' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-download me-2"></i> Setup Agent
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.ai_insights_dashboard') }}"
+          class="nav-link text-white {% if 'ai_insights' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-brain me-2"></i> AI Insights
+        </a>
+      </li>
+      {% if sub and sub.sos_enabled %}
+      <li class="nav-item mb-1">
+        <a href="#" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#modalSOS">
+          <i class="fa-solid fa-bell me-2"></i> SOS Alerts
+        </a>
+      </li>
+      {% endif %}
+      {% if user.role == 'admin' %}
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.manage_users') }}"
+          class="nav-link text-white {% if 'manage_users' in request.endpoint or 'add_user' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-users-gear me-2"></i> Manage Users
+        </a>
+      </li>
+      {% endif %}
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.subscription') }}"
+          class="nav-link text-white {% if 'subscription' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-credit-card me-2"></i> Subscription
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('dashboard.profile') }}"
+          class="nav-link text-white {% if 'profile' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-user-gear me-2"></i> Profile
+        </a>
+      </li>
+      <li class="nav-item mb-1">
+        <a href="{{ url_for('auth.logout') }}" class="nav-link text-white">
+          <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+        </a>
+      </li>
+    </ul>
+
+    <!-- Theme Toggle -->
+    <div class="mt-4 pt-3 border-top border-secondary">
+      <div class="d-flex align-items-center justify-content-between px-2">
+        <span class="small text-muted"><i class="fa-solid fa-moon me-1"></i> Theme</span>
+        <div class="form-check form-switch mb-0">
+          <input class="form-check-input" type="checkbox" id="themeToggle">
+        </div>
+      </div>
+    </div>
   </div>
 
-  <ul class="nav flex-column">
-    <li class="nav-item mb-2">
-      <a class="nav-link text-white" href="{{ url_for('dashboard.index') }}">
-        <i class="fa-solid fa-gauge me-2"></i> Overview
-      </a>
-    </li>
-    <li class="nav-item mb-2">
-      <a class="nav-link text-white" href="{{ url_for('dashboard.index') }}">
-        <i class="fa-solid fa-user-shield me-2"></i> Dashboard
-      </a>
-    </li>
-    <li class="nav-item mb-2">
-      <a class="nav-link text-white" href="{{ url_for('auth.logout') }}">
-        <i class="fa-solid fa-right-from-bracket me-2 text-danger"></i> Logout
-      </a>
-    </li>
-  </ul>
-</nav>
+  <!-- Page Content Wrapper -->
+  <div id="page-content-wrapper" class="flex-grow-1 p-3 position-relative" style="overflow-y: auto; height: 100vh;">
+    {% block dash_content %}{% endblock %}
+  </div>
 
-
-  <!-- 📊 Main Content -->
-  <main class="flex-grow-1 bg-dark text-white p-4" style="min-height: 100vh;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4><i class="fa-solid fa-chart-line me-2 text-info"></i>Dashboard Overview</h4>
-      <div>
-        <span class="me-3"><i class="fa-solid fa-user"></i> {{ current_user.username }}</span>
-        <span class="badge bg-primary text-uppercase">{{ current_user.organization.sector if current_user.organization else 'N/A' }}</span>
-      </div>
-    </div>
-
-    <!-- 🔹 Common Overview Cards -->
-    <div class="row mb-4 text-center">
-      <div class="col-md-3 mb-3">
-        <div class="card bg-secondary text-white shadow-sm">
-          <div class="card-body">
-            <h6>Total Devices</h6>
-            <h3 class="fw-bold">{{ total_devices or 0 }}</h3>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card bg-secondary text-white shadow-sm">
-          <div class="card-body">
-            <h6>Online Devices</h6>
-            <h3 class="fw-bold text-success">{{ online_devices or 0 }}</h3>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card bg-secondary text-white shadow-sm">
-          <div class="card-body">
-            <h6>Unusual Activity</h6>
-            <h3 class="fw-bold text-warning">{{ unusual_activity or 0 }}</h3>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card bg-secondary text-white shadow-sm">
-          <div class="card-body">
-            <h6>Compliance Score</h6>
-            <h3 class="fw-bold text-info">{{ compliance_score or '89%' }}</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 📈 Threat Summary -->
-    <section class="mb-5">
-      <h5 class="text-info mb-3"><i class="fa-solid fa-shield-halved me-2"></i>Recent Security Events</h5>
-      <div class="card bg-secondary p-3">
-        <ul class="list-unstyled mb-0">
-          {% for event in recent_events %}
-          <li class="mb-2">
-            <span class="badge bg-{{ event.level }}">{{ event.level|capitalize }}</span>
-            {{ event.description }} — <small class="text-muted">{{ event.time }}</small>
-          </li>
-          {% else %}
-          <li class="text-muted">No recent events found.</li>
-          {% endfor %}
-        </ul>
-      </div>
-    </section>
-
-    <!-- 🧩 Sector-Specific Section -->
-    <section id="sector-content" class="mt-5">
-      {% block sector_content %}
-      <div class="text-center text-muted">
-        <p><i class="fa-solid fa-layer-group"></i> Sector-specific widgets will load here...</p>
-      </div>
-      {% endblock %}
-    </section>
-  </main>
 </div>
+
+<!-- SOS Button & Modals -->
+{% if sub and sub.sos_enabled %}
+<!-- Floating SOS quick button -->
+<div class="position-fixed top-0 end-0 mt-3 me-3" style="z-index: 1050;">
+  <button class="btn btn-outline-warning btn-sm position-relative tg-sos-btn" data-bs-toggle="modal"
+    data-bs-target="#modalSOS">
+    <i class="fa-solid fa-bell fa-beat-fade"></i>
+  </button>
+</div>
+
+<!-- SOS Modal -->
+<div class="modal fade" id="modalSOS" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content tg-card shadow-card">
+      <div class="modal-header d-flex justify-content-between align-items-center">
+        <h6 class="modal-title text-warning mb-0">
+          <i class="fa-solid fa-bell me-2"></i> Real-Time SOS Alerts
+        </h6>
+        <div class="d-flex align-items-center gap-2">
+          <button id="refresh-alerts-btn" class="btn btn-outline-light btn-sm">
+            <i class="fa-solid fa-rotate"></i> Refresh
+          </button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-striped align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Time (UTC)</th>
+                <th>Severity</th>
+                <th>Category</th>
+                <th>Action</th>
+                <th>MAC</th>
+                <th>Title / Message</th>
+              </tr>
+            </thead>
+            <tbody id="sos-alerts-body">
+              <tr>
+                <td colspan="6" class="text-center text-muted py-3">
+                  <i class="fa-solid fa-spinner fa-spin me-2"></i> Loading alerts...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-between">
+        <small class="text-muted">Auto-refreshes every <strong>10 seconds</strong></small>
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOS Preferences Modal -->
+<div class="modal fade" id="modalSOSPrefs" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content tg-card shadow-card">
+      <div class="modal-header">
+        <h6 class="modal-title text-accent">
+          <i class="fa-solid fa-gear me-2"></i> SOS Alert Preferences
+        </h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="sosPrefsForm" class="text-light">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Minimum Severity Level</label>
+            <select id="prefMinSeverity" class="form-select bg-dark text-light border-secondary">
+              <option value="info">Info</option>
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+            <small class="text-muted">Alerts below this level will be ignored.</small>
+          </div>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="prefEmailEnabled" checked>
+            <label class="form-check-label" for="prefEmailEnabled">Enable Email Notifications</label>
+          </div>
+
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="prefSmsEnabled">
+            <label class="form-check-label" for="prefSmsEnabled">Enable SMS Notifications</label>
+          </div>
+
+          <div class="text-end">
+            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-accent">Save Preferences</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- AI Chat Widget -->
+{% include "components/ai_chat_widget.html" %}
+
+{% endblock %}
+
+{% block extra_js %}
+{{ super() }}
+<!-- Theme toggle logic -->
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+<!-- AI Chat Logic -->
+<script src="{{ url_for('static', filename='js/ai_chat.js') }}"></script>
+
+<script>
+  function copyCommand(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("copy");
+    selection.removeAllRanges();
+    const btn = document.querySelector(`[data-copy='${id}']`);
+    if (btn) {
+      const original = btn.innerHTML;
+      btn.innerHTML = "✅ Copied!";
+      setTimeout(() => (btn.innerHTML = original), 1500);
+    }
+  }
+</script>
 {% endblock %}

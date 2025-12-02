@@ -1,0 +1,41 @@
+{% extends "install/base_install.html" %}
+{% block title %}TenshiGuard – Android Agent (Coming Soon){% endblock %}
+
+{% block content %}
+<div class="install-header fade-in">
+  <div class="install-title-block">
+    <div class="install-icon">
+      <i class="fa-brands fa-android"></i>
+    </div>
+    <div>
+      <h1>TenshiGuard <span>Android</span> Agent</h1>
+      <p>Mobile agent for alerting and device checks – currently in development.</p>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard.setup_agent_page') }}" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i> Back to Setup Agent
+  </a>
+</div>
+
+<div class="install-card-soft fade-in fade-delay-1">
+  <div class="step-heading">
+    <span class="step-pill">Preview</span>
+    <span class="label">What this module will do</span>
+  </div>
+
+  <div class="step-body">
+    <ul class="check-list">
+      <li>Receive SOS alerts and critical notifications on your phone.</li>
+      <li>Approve / acknowledge alerts directly from the mobile app.</li>
+      <li>View at-risk devices and recent incidents on the go.</li>
+    </ul>
+
+    <div class="info-panel mt-3">
+      <i class="fa-solid fa-circle-info me-1"></i>
+      This feature is not enabled in the demo yet. Your TenshiGuard manager
+      will show an update once the Android agent is ready for beta testing.
+    </div>
+  </div>
+</div>
+{% endblock %}
