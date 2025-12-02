@@ -1,0 +1,559 @@
+
+@media only screen and (min-width:0px) and (max-width:767px) {
+    /* global start */
+    section {
+        padding: 50px 10px;
+    }
+    h2 {
+        font-size: 28px;
+    }
+    h3 {
+        font-size: 18px;
+    }
+    p {
+        font-size: 14px;
+    }
+    .btn {
+        font-size: 14px;
+        padding: 8px 27px 7px;
+    }
+    .d2c_title::after {
+        top: 68px;
+    }
+    /* global end */
+
+    /* header */
+    .d2c_navbar {
+        padding: 12px 10px;
+    }
+    .d2c_navbar .navbar-nav .nav-link {
+        font-size: 16px;
+    }
+    /* hero */
+    .d2c_hero_wrapper {
+        height: 100%;
+    }
+    .d2c_shade_bg img {
+        object-fit: cover;
+    }
+    .d2c_hero_wrapper h1 {
+        font-size: 36px;
+    }
+    /* about */
+    .d2c_about_wrapper {
+        padding: 70px 10px 50px;
+    }
+    .d2c_img_container .d2c_img_wrapper:first-child {
+        width: 240px;
+        top: -38px;
+        left: 26px;
+    }
+    .d2c_img_container .d2c_img_wrapper:nth-child(2) {
+        width: 242px;
+        bottom: 36px;
+        right: 24px;
+    }
+    /* partner */
+    .d2c_partner_wrapper {
+        padding: 0px 0px 50px;
+    }
+    /* service */
+    .d2c_service_wrapper .d2c_card_wrapper {
+        height: 100%;
+        padding: 30px;
+    }
+    .d2c_service_wrapper li {
+        font-size: 16px;
+    }
+    .d2c_service_wrapper ul {
+        margin-bottom: 0px;
+    }
+    .d2c_service_wrapper .btn {
+        margin-top: 20px;
+    }
+    .d2c_service_card:after {
+        display: none;
+    }
+    /* feature */
+    .d2c_feature_wrapper {
+        padding: 90px 10px 50px;
+    }
+    .d2c_feature_wrapper .d2c_img_container .d2c_img_wrapper:first-child {
+        width: 217px !important;
+    }
+    .d2c_feature_wrapper .d2c_img_container .d2c_img_wrapper:nth-child(2) {
+        width: 210px;
+    }
+    /* team */
+    .d2c_team_wrapper .d2c_sub_title::after {
+        left: 0%;
+        transform: translateX(-7px);
+    }
+    .d2c_team_wrapper .d2c_title::after {
+        top: 40px;
+        left: 0%;
+        transform: translateX(-18px);
+    }
+    .d2c_team_card .d2c_img_wrapper {
+        width: 100%;
+        height: 330px;
+    }
+    .d2c_team_card .d2c_img_wrapper::before {
+        width: 100%;
+        height: 330px;
+    }
+    /* portfolio */
+    .d2c_portfolio_wrapper .d2c_sub_title::after {
+        left: -4px;
+    }
+    .d2c_portfolio_wrapper h2 {
+        margin-bottom: 80px;
+    }
+    .d2c_portfolio_wrapper .d2c_title::after {
+        left: 0%;
+        transform: translateX(-4%);
+    }
+    .d2c_grid {
+        column-count: 1;
+    }
+    .fancybox {
+        height: 350px;
+    }
+    /* blog */
+    .d2c_blog_wrapper {
+        padding: 50px 10px;
+    }
+    .d2c_blog_wrapper p {
+        margin-bottom: 24px;
+    }
+    .d2c_blog_wrapper .d2c_sub_title::after {
+        left: 0%;
+        transform: translateX(-5px);
+    }
+    .d2c_blog_wrapper .d2c_title::after {
+        top: 40px;
+        left: 0%;
+        transform: translateX(-16px);
+    }
+    .d2c_blog_wrapper .d2c_card_body {
+        margin: 0px 20px;
+        padding: 20px;
+        margin-top: -33px;
+    }
+    /* testimonial */
+    .d2c_testimonial_wrapper .d2c_card_wrapper {
+        margin-bottom: 30px;
+    }
+    .d2c_testimonial_wrapper .d2c_card_wrapper h5 {
+        font-size: 22px;
+        padding: 20px;
+        margin-bottom: 60px;
+    }
+    .d2c_testimonial_wrapper .d2c_sub_title::after {
+        left: 0%;
+        transform: translateX(-5px);
+    }
+    .d2c_testimonial_wrapper .d2c_title::after {
+        top: 60px;
+        left: 0%;
+        transform: translateX(-17px);
+    }
+    /* newsletter */
+    .d2c_newsletter_wrapper .d2c_card_wrapper {
+        padding: 40px 30px;
+    }
+    .d2c_newsletter_wrapper .d2c_sub_title::after {
+        left: -9px;
+    }
+    /* footer */
+    .d2c_footer_wrapper {
+        padding: 50px 10px 30px;
+    }
+    .d2c_footer_logo {
+        max-width: 100%;
+    }
+    .d2c_footer_wrapper h3 {
+        margin-bottom: 20px;
+    }
+    /* copy */
+    .d2c_copy_wrapper h4 {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width:768px) and (max-width:991px) {
+    /* global start */
+    section {
+        padding: 50px 0px;
+    }
+    h2 {
+        font-size: 32px;
+    }
+    h3 {
+        font-size: 18px;
+    }
+    p {
+        font-size: 15px;
+    }
+    .btn {
+        font-size: 15px;
+        padding: 9px 24px 8px;
+    }
+    .d2c_title::after {
+        top: 40px;
+    }
+    /* global end */
+
+    /* header */
+    .d2c_navbar {
+        padding: 12px 0px;
+    }
+    .d2c_navbar .navbar-nav .nav-link {
+        font-size: 16px;
+    }
+    /* hero */
+    .d2c_hero_wrapper h1 {
+        font-size: 42px;
+    }
+    /* about */
+    .d2c_about_wrapper {
+        padding: 120px 0px 50px;
+    }
+    .d2c_img_container .d2c_img_wrapper:first-child {
+        top: -63px;
+        left: 43px;
+    }
+    .d2c_img_container .d2c_img_wrapper:nth-child(2) {
+        bottom: 55px;
+        right: 48px;
+    }
+    /* partner */
+    .d2c_partner_wrapper {
+        padding: 20px 0px 70px;
+    }
+    /* service */
+    .d2c_service_wrapper .d2c_card_wrapper {
+        height: 100%;
+        padding: 30px;
+    }
+    .d2c_service_card:after {
+        top: 105px;
+        left: -45px;
+    }
+    /* feature */
+    .d2c_feature_wrapper {
+        padding: 150px 0px 100px;
+    }
+    /* team */
+    .d2c_team_card .d2c_img_wrapper {
+        width: 100%;
+        height: 320px;
+    }
+    .d2c_team_card .d2c_img_wrapper::before {
+        width: 100%;
+        height: 320px;
+    }
+    /* portfolio */
+    .d2c_portfolio_wrapper .d2c_sub_title::after {
+        left: 240px;
+    }
+    .d2c_portfolio_wrapper h2 {
+        margin-bottom: 80px;
+    }
+    .d2c_portfolio_wrapper .d2c_title::after {
+        top: 45px;
+        transform: translateX(-12%);
+    }
+    .d2c_grid {
+        column-count: 2;
+    }
+    .fancybox {
+        height: 350px;
+    }
+    /* blog */
+    .d2c_blog_wrapper {
+        padding: 60px 0px;
+    }
+    .d2c_blog_wrapper .d2c_card_body {
+        margin-top: -60px;
+    }
+    /* testimonial */
+    .d2c_testimonial_wrapper .d2c_card_wrapper {
+        margin-bottom: 30px;
+    }
+    .d2c_testimonial_wrapper .d2c_card_wrapper h5 {
+        font-size: 27px;
+        margin-bottom: 80px;
+    }
+    .d2c_testimonial_wrapper .d2c_sub_title::after {
+        transform: translateX(-80px);
+    }
+    /* newsletter */
+    .d2c_newsletter_wrapper .d2c_card_wrapper {
+        padding: 70px 30px;
+    }
+    .d2c_newsletter_wrapper .d2c_sub_title::after {
+        left: -7px;
+    }
+    .form-control {
+        padding: 9px 10px;
+    }
+    /* footer */
+    .d2c_footer_wrapper {
+        padding: 60px 0px 30px;
+    }
+    
+}
+
+@media only screen and (min-width:992px) and (max-width:1199px) {
+    /* global start */
+    section {
+        padding: 50px 0px;
+    }
+    h2 {
+        font-size: 32px;
+        margin-bottom: 34px;
+    }
+    h3 {
+        font-size: 18px;
+    }
+    p {
+        font-size: 14px;
+    }
+    .btn {
+        font-size: 15px;
+        padding: 8px 26px 7px;
+    }
+    .d2c_title::after {
+        top: 68px;
+    }
+    /* global end */
+
+    /* header */
+    .d2c_navbar {
+        padding: 16px 0px;
+    }
+    .d2c_navbar .navbar-nav .nav-link {
+        font-size: 15px;
+    }
+    .d2c_navbar .navbar-nav .nav-item {
+        margin: 3px 10px;
+    }
+    /* hero */
+    .d2c_hero_wrapper h1 {
+        font-size: 42px;
+    }
+    .d2c_shade_bg img {
+        object-fit: cover;
+    }
+    /* about */
+    .d2c_about_wrapper {
+        padding: 70px 0px 50px;
+    }
+    .d2c_img_container .d2c_img_wrapper:first-child {
+        width: 265px;
+        top: -64px;
+    }
+    .d2c_about_wrapper .d2c_img_container .d2c_img_wrapper:nth-child(2) {
+        width: 244px;
+        bottom: 41px;
+    }
+    /* partner */
+    .d2c_partner_wrapper {
+        padding: 50px 0px;
+    }
+    /* service */
+    .d2c_service_wrapper .d2c_card_wrapper p {
+        font-size: 14px;
+    }
+    .d2c_service_wrapper .d2c_title::after {
+        top: 30px;
+    }
+    .d2c_service_card:after {
+        top: 69px;
+        left: -39px;
+    }
+    /* feature */
+    .d2c_feature_wrapper {
+        padding: 110px 0px 70px;
+    }
+    .d2c_feature_wrapper .d2c_img_container .d2c_img_wrapper:first-child {
+        width: 245px;
+    }
+    .d2c_img_container .d2c_img_wrapper:nth-child(2) {
+        width: 245px;
+    }
+    /* team */
+    .d2c_team_card .d2c_img_wrapper {
+        width: 100%;
+        height: 390px;
+    }
+    .d2c_team_card .d2c_img_wrapper::before {
+        width: 100%;
+        height: 390px;
+    }
+    /* portfolio */
+    .d2c_portfolio_wrapper h2 {
+        margin-bottom: 100px;
+    }
+    .d2c_portfolio_wrapper .d2c_sub_title::after {
+        left: 126px;
+    }
+    .d2c_portfolio_wrapper .d2c_title::after {
+        transform: translateX(-19%);
+    }
+    .fancybox {
+        height: 340px;
+    }
+    /* blog */
+    .d2c_blog_wrapper {
+        padding: 60px 0px;
+    }
+    .d2c_blog_wrapper p {
+        font-size: 14px;
+    }
+    .d2c_blog_wrapper h4 {
+        font-size: 16px;
+    }
+    /* testimonial */
+    .d2c_testimonial_wrapper h2 {
+        margin-bottom: 50px;
+    }
+    .d2c_testimonial_wrapper .d2c_card_wrapper h5 {
+        margin-bottom: 50px;
+        font-size: 32px;
+    }
+    .d2c_blog_wrapper .d2c_card_body {
+        margin-top: -38px;
+    }
+    /* newsletter */
+    .d2c_newsletter_wrapper .form-control {
+        padding: 8px 10px;
+    }
+    .d2c_newsletter_wrapper .d2c_sub_title::after {
+        left: 143px;
+    }
+    /* footer */
+    .d2c_footer_logo {
+        max-width: 250px;
+    }
+}
+
+@media only screen and (min-width:1200px) and (max-width:1400px) {
+    /* global start */
+    section {
+        padding: 70px 0px;
+    }
+    h2 {
+        font-size: 36px;
+    }
+    h3 {
+        font-size: 20px;
+    }
+    .btn {
+        font-size: 15px;
+        padding: 9px 28px 8px;
+    }
+    .d2c_title::after {
+        top: 90px;
+    }
+    /* global end */
+
+    /* header */
+    .d2c_navbar {
+        padding: 16px 0px;
+    }
+    .d2c_navbar .navbar-nav .nav-link {
+        font-size: 16px;
+    }
+    /* hero */
+    .d2c_hero_wrapper h1 {
+        font-size: 48px;
+    }
+    /* about */
+    .d2c_about_wrapper {
+        padding: 110px 0px 70px;
+    }
+    .d2c_img_container .d2c_img_wrapper:first-child {
+        width: 337px;
+    }
+    .d2c_img_container .d2c_img_wrapper:nth-child(2) {
+        width: 310px;
+    }
+    /* partner */
+    .d2c_partner_wrapper {
+        padding: 70px 0px;
+    }
+    /* service */
+    .d2c_service_wrapper .d2c_card_wrapper {
+        height: 100%;
+        padding: 30px;
+    }
+    .d2c_service_wrapper .d2c_card_wrapper p {
+        font-size: 14px;
+    }
+    /* feature */
+    .d2c_feature_wrapper {
+        padding: 130px 0px 70px;
+    }
+    .d2c_feature_wrapper .d2c_img_container .d2c_img_wrapper:first-child {
+        width: 287px;
+    }
+    .d2c_img_container .d2c_img_wrapper:nth-child(2) {
+        width: 312px;
+    }
+    /* team */
+    .d2c_team_card .d2c_img_wrapper {
+        width: 100%;
+        height: 340px;
+    }
+    .d2c_team_card .d2c_img_wrapper::before {
+        width: 100%;
+        height: 340px;
+    }
+    /* portfolio */
+    .d2c_portfolio_wrapper .d2c_sub_title::after {
+        left: 167px;
+    }
+    .d2c_portfolio_wrapper h2 {
+        margin-bottom: 100px;
+    }
+    .fancybox {
+        height: 400px;
+    }
+    /* blog */
+    .d2c_blog_wrapper {
+        padding: 70px 0px;
+    }
+    .d2c_blog_wrapper p {
+        font-size: 14px;
+    }
+    .d2c_blog_wrapper h4 {
+        font-size: 16px;
+    }
+    /* testimonial */
+    .d2c_testimonial_wrapper .d2c_card_wrapper h5 {
+        margin-bottom: 50px;
+    }
+    /* newsletter */
+    .d2c_newsletter_wrapper .d2c_sub_title::after {
+        left: 196px;
+    }
+    .d2c_newsletter_wrapper .form-control {
+        padding: 8px 10px;
+    }
+    /* footer */
+    .d2c_footer_wrapper {
+        padding: 70px 0px 30px;
+    }
+}
+
+
+/* 
+    Template Name: {{Tech Start Pro}}
+    Template URL: {{https://www.designtocodes.com/product/techstart-pro-responsive-bootstrap-landing-page/}}
+    Description: {{TechStart Pro landing page is the definitive solution for businesses and individuals seeking a top-tier online presence. This responsive Bootstrap landing page is not just good-looking, it's also simple.}}
+    Author: DesignToCodes
+    Author URL: https://www.designtocodes.com
+    Text Domain: {{ Tech Start Pro }}
+ */
